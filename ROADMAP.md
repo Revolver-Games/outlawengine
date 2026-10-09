@@ -19,3 +19,12 @@ This is a scoped backlog, not a list of completed capabilities. Verify each acce
 | P3 | Open-world slice | One town and surrounding terrain, horse/NPC/wildlife behaviors, inventory, weather/time and persistent save data |
 
 No issue backlog was published while GitHub fork creation remained blocked. These rows are ready to become issues after fork access is available. Do not enable public game servers as part of that step.
+
+## Narrative acceptance update
+
+The first authored MissionScript/StoryScript core and combined cinematic test
+are implemented. Their broad milestone remains open: only one active definition,
+local save-owned rewards and host-supplied events are supported. Real trigger and
+inventory adapters, production dialogue/objective UI, chapter transitions, multiple
+missions, native acceptance and networking authority still need implementation.
+WantedSim, WON and Outlaw Director are not implemented by this slice.

@@ -20,6 +20,14 @@ if(NOT PAL_TRAIT_WANTED_SUPPORTED)
     return()
 endif()
 
+ly_add_target(
+    NAME Wanted.Narrative STATIC NAMESPACE Gem
+    FILES_CMAKE wanted_narrative_files.cmake
+    INCLUDE_DIRECTORIES PUBLIC Include
+        PRIVATE ${LY_ROOT_FOLDER}/Gems/ScriptMotion/Code/Source/Core
+)
+target_compile_features(Wanted.Narrative PUBLIC cxx_std_20)
+
 # We are on a supported platform, so add the ${gem_name} target
 # Note: We include the common files and the platform specific files which are set in wanted_files.cmake and
 # in ${pal_dir}/wanted_${PAL_PLATFORM_NAME_LOWERCASE}_files.cmake
@@ -39,7 +47,9 @@ ly_add_target(
         PRIVATE
             AZ::AzGameFramework
             Gem::Atom_AtomBridge.Static
+            Gem::Wanted.Narrative
 )
+target_compile_features(${gem_name}.Private.Object PUBLIC cxx_std_20)
 
 ly_add_target(
     NAME ${gem_name} ${PAL_TRAIT_MONOLITHIC_DRIVEN_MODULE_TYPE}

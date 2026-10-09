@@ -83,3 +83,13 @@ cmake --build --preset wanted-windows-profile --parallel 2
 The presets keep downloaded third-party packages in `WantedDevelopment/Packages` and build outputs inside the project. The full build must compile `ScriptMotion`, `ScriptMotion.Editor`, `Wanted`, `Editor`, and `Wanted.GameLauncher`. Read the first compiler error, correct the adapter against actual upstream APIs, then rebuild. Do not declare editor preview or game behavior verified until the executable runs with processed assets and a compatible Actor.
 
 See `Projects/Wanted/FIRST_SCENE.md` for the first real playable scene task. The shipped example skeleton is JSON data, not a skinned Actor asset. No automatic retargeting or proprietary character assets are included.
+
+## Authored narrative and combined tests (2026-10-09)
+
+`Projects/Wanted/Tests` now builds FirstErrand and the narrative library/tests.
+Windows MSVC Debug and Release each pass 2/2 CTest. For combined testing, configure
+a separate build with `-DWANTED_CINESCRIPT_SOURCE=<checkout>/Gems/CineScript` after
+obtaining the CineScript slice; Debug and Release each passed 5/5 in this session.
+See `Documentation/Validation/narrative-runtime.md` for exact commands, source
+snapshot provenance, logs and native verification limits. These results do not
+represent a successful O3DE engine or Editor build.

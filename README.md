@@ -155,3 +155,11 @@ This project exists thanks to all the people who contribute. [[Contribute](CONTR
 ## License
 
 For terms please see the LICENSE*.TXT files at the root of this distribution.
+
+## Authored mission and story slice
+
+[MissionScript/StoryScript in WANTED](Projects/Wanted/NARRATIVE.md) now has a compiled
+data-driven mission, guarded dialogue, persistent decisions/reputation and atomic
+checkpoint restoration. The original FirstErrand API is preserved. Native O3DE
+integration remains unverified; [test results](Documentation/Validation/narrative-runtime.md)
+include the combined CineScript/ScriptMotion runtime check.
