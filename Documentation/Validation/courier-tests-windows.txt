@@ -1,0 +1,11 @@
+test_all_vertices_have_finite_normalized_weights_and_valid_joints (__main__.CourierAssetTests.test_all_vertices_have_finite_normalized_weights_and_valid_joints) ... ok
+test_asset_is_reproducible_and_self_contained (__main__.CourierAssetTests.test_asset_is_reproducible_and_self_contained) ... ok
+test_motion_sources_use_gltf_joint_local_basis (__main__.CourierAssetTests.test_motion_sources_use_gltf_joint_local_basis) ... ok
+test_sample_clip_uses_existing_joints_and_ada_dialogue (__main__.CourierAssetTests.test_sample_clip_uses_existing_joints_and_ada_dialogue) ... ok
+test_skin_joints_and_inverse_bind_matrices (__main__.CourierAssetTests.test_skin_joints_and_inverse_bind_matrices) ... ok
+test_triangles_have_outward_normals_and_valid_buffer_ranges (__main__.CourierAssetTests.test_triangles_have_outward_normals_and_valid_buffer_ranges) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.006s
+
+OK

@@ -5,6 +5,7 @@
 #include "ScriptMotionPlayback.h"
 
 #include <ScriptMotion/ScriptMotion.h>
+#include <ScriptMotion/MotionBake.h>
 #include <AzCore/IO/FileIO.h>
 #include <AzCore/std/smart_ptr/make_shared.h>
 #include <AzCore/std/smart_ptr/unique_ptr.h>
@@ -23,19 +24,14 @@
 #include <EMotionFX/Source/TransformData.h>
 #include <EMotionFX/Source/TwoStringEventData.h>
 
-#include <algorithm>
 #include <cmath>
 #include <string>
-#include <vector>
+#include <utility>
 
 namespace Wanted::ScriptMotion::O3DE
 {
     namespace
     {
-        constexpr std::size_t MaxBakedTransformSamples = 2000000;
-        constexpr std::size_t MaxBakeValidationWork = 20000000;
-        constexpr double MaxBakedDurationSeconds = 600.0;
-
         Result<std::string> ReadJson(const AZStd::string& path)
         {
             if (path.empty())
@@ -120,96 +116,66 @@ namespace Wanted::ScriptMotion::O3DE
             return {};
         }
 
-        // Bake the validated evaluator output into the engine's native motion representation.
-        // This preserves EMotionFX pose linking, native event processing, and blend-in behavior.
-        // Smooth curves are approximated between samples; discontinuous Step curves are rejected.
+        Result<Skeleton> CaptureActorSkeleton(const EMotionFX::ActorInstance& actor, const AZStd::string& name)
+        {
+            Skeleton result;
+            result.name = name.c_str();
+            const auto* native = actor.GetActor()->GetSkeleton();
+            const auto* bind = actor.GetTransformData()->GetBindPose();
+            if (native->GetNumNodes() == 0 || native->GetNumNodes() > MaxBones)
+            {
+                return {{}, "Actor must have between 1 and 1024 joints."};
+            }
+            for (std::size_t index = 0; index < native->GetNumNodes(); ++index)
+            {
+                const auto* node = native->GetNode(index);
+                const auto& transform = bind->GetLocalSpaceTransform(index);
+#ifndef EMFX_SCALE_DISABLED
+                if (!transform.m_scale.IsClose(AZ::Vector3::CreateOne(), 0.0001f))
+                {
+                    return {{}, "Scaled Actor bind poses are not supported."};
+                }
+#endif
+                Bone bone;
+                bone.name = node->GetName();
+                bone.parent = node->GetParentIndex() == InvalidIndex ? -1 : static_cast<int>(node->GetParentIndex());
+                bone.bindPose.translation = {transform.m_position.GetX(), transform.m_position.GetY(), transform.m_position.GetZ()};
+                bone.bindPose.rotation = {transform.m_rotation.GetX(), transform.m_rotation.GetY(),
+                    transform.m_rotation.GetZ(), transform.m_rotation.GetW()};
+                result.bones.push_back(std::move(bone));
+            }
+            if (const std::string error = ValidateSkeleton(result); !error.empty())
+            {
+                return {{}, error};
+            }
+            return {std::move(result), {}};
+        }
+
         Result<AZStd::unique_ptr<EMotionFX::NonUniformMotionData>> Bake(const Clip& clip,
             const Skeleton& skeleton, float sampleRate)
         {
-            if (clip.tracks.empty())
+            const auto baked = BakeMotion(clip, skeleton, sampleRate);
+            if (!baked)
             {
-                return {{}, "The initial native adapter requires at least one animated bone track."};
-            }
-            if (clip.duration > MaxBakedDurationSeconds)
-            {
-                return {{}, "The initial native adapter supports clips up to 600 seconds."};
-            }
-            const std::size_t intervals = static_cast<std::size_t>(std::ceil(clip.duration * sampleRate));
-            std::vector<float> times;
-            times.reserve(intervals + 2);
-            for (std::size_t index = 0; index <= intervals; ++index)
-            {
-                times.push_back(static_cast<float>(std::min(clip.duration, static_cast<double>(index) / sampleRate)));
-            }
-            times.push_back(static_cast<float>(clip.duration));
-            std::size_t keyCount = 0;
-            for (const BoneTrack& track : clip.tracks)
-            {
-                keyCount += track.keys.size();
-                for (std::size_t index = 0; index < track.keys.size(); ++index)
-                {
-                    const Keyframe& key = track.keys[index];
-                    if (key.interpolation == Interpolation::Step && index + 1 < track.keys.size())
-                    {
-                        return {{}, "Step interpolation is supported by the core evaluator but not the initial native adapter. Use linear/smoothstep for engine playback."};
-                    }
-                    times.push_back(static_cast<float>(key.time));
-                }
-            }
-            std::sort(times.begin(), times.end());
-            times.erase(std::unique(times.begin(), times.end()), times.end());
-            if (times.size() < 2 || times.size() > MaxBakedTransformSamples / std::max<std::size_t>(1, skeleton.bones.size()))
-            {
-                return {{}, "Native motion exceeds the two-million-transform baking budget or has unrepresentable duration."};
-            }
-            // The portable API revalidates authored data on every sample. Bound that
-            // work as well as output memory until we have an immutable validated clip.
-            std::size_t validationItems = skeleton.bones.size() + clip.events.size();
-            for (const BoneTrack& track : clip.tracks)
-            {
-                validationItems += track.keys.size();
-            }
-            constexpr std::size_t MaxValidationVisits = 40000000;
-            if (times.size() > MaxValidationVisits / std::max<std::size_t>(1, validationItems))
-            {
-                return {{}, "Native bake exceeds the validation-work budget; reduce clip length, keys or sample rate."};
-            }
-            // EvaluatePose revalidates its mutable input for every sample. Bound that work until
-            // a validated immutable clip/cache API can move preprocessing out of the editor thread.
-            const std::size_t workPerSample = skeleton.bones.size() + keyCount + clip.events.size();
-            if (times.size() > MaxBakeValidationWork / std::max<std::size_t>(1, workPerSample))
-            {
-                return {{}, "Clip exceeds the initial adapter's bounded bake-work budget; split the clip or lower the sample rate."};
+                return {{}, baked.error};
             }
             auto native = AZStd::make_unique<EMotionFX::NonUniformMotionData>();
             native->SetSampleRate(sampleRate);
-            for (const BoneTrack& track : clip.tracks)
+            for (std::size_t joint = 0; joint < skeleton.bones.size(); ++joint)
             {
-                const Bone& bone = skeleton.bones[track.boneIndex];
-                const EMotionFX::Transform bind = ToNative(bone.bindPose);
-                const std::size_t joint = native->AddJoint(AZStd::string(bone.name.c_str()), bind, bind);
-                native->AllocateJointPositionSamples(joint, times.size());
-                native->AllocateJointRotationSamples(joint, times.size());
-            }
-            for (std::size_t sample = 0; sample < times.size(); ++sample)
-            {
-                const auto pose = EvaluatePose(clip, skeleton, std::min(static_cast<double>(times[sample]), clip.duration), {1.0, false});
-                if (!pose)
+                const Bone& bone = skeleton.bones[joint];
+                const auto bind = ToNative(bone.bindPose);
+                native->AddJoint(AZStd::string(bone.name.c_str()), bind, bind);
+                native->AllocateJointPositionSamples(joint, baked.value.times.size());
+                native->AllocateJointRotationSamples(joint, baked.value.times.size());
+                for (std::size_t sample = 0; sample < baked.value.times.size(); ++sample)
                 {
-                    return {{}, pose.error};
-                }
-                for (std::size_t joint = 0; joint < clip.tracks.size(); ++joint)
-                {
-                    const EMotionFX::Transform value = ToNative(pose.value.localTransforms[clip.tracks[joint].boneIndex]);
-                    if (!value.m_position.IsFinite() || !value.m_rotation.IsFinite())
-                    {
-                        return {{}, "A source transform exceeds the native float representation."};
-                    }
-                    native->SetJointPositionSample(joint, sample, {times[sample], value.m_position});
-                    native->SetJointRotationSample(joint, sample, {times[sample], value.m_rotation});
+                    const auto value = ToNative(baked.value.poses[sample].localTransforms[joint]);
+                    native->SetJointPositionSample(joint, sample, {baked.value.times[sample], value.m_position});
+                    native->SetJointRotationSample(joint, sample, {baked.value.times[sample], value.m_rotation});
                 }
             }
-            native->SetDuration(static_cast<float>(clip.duration));
+            native->SetDuration(baked.value.duration);
             if (!native->VerifyIntegrity())
             {
                 return {{}, "EMotionFX rejected the baked motion's keyframe integrity."};
@@ -270,12 +236,20 @@ namespace Wanted::ScriptMotion::O3DE
         {
             return Fail("Playback requires finite speed/blend values in [0,10] and sample rate in [30,240].");
         }
-        const auto skeletonJson = ReadJson(configuration.m_skeletonPath);
-        if (!skeletonJson)
+        Result<Skeleton> skeleton;
+        if (configuration.m_useActorBindPose)
         {
-            return Fail(skeletonJson.error.c_str());
+            skeleton = CaptureActorSkeleton(*m_actor, configuration.m_actorSkeletonName);
         }
-        const auto skeleton = ParseSkeleton(skeletonJson.value);
+        else
+        {
+            const auto skeletonJson = ReadJson(configuration.m_skeletonPath);
+            if (!skeletonJson)
+            {
+                return Fail(skeletonJson.error.c_str());
+            }
+            skeleton = ParseSkeleton(skeletonJson.value);
+        }
         if (!skeleton)
         {
             return Fail(skeleton.error.c_str());
@@ -322,7 +296,8 @@ namespace Wanted::ScriptMotion::O3DE
         EMotionFX::PlayBackInfo playback;
         playback.m_numLoops = configuration.m_loop ? EMFX_LOOPFOREVER : 1;
         playback.m_playSpeed = configuration.m_playbackSpeed;
-        playback.m_blendInTime = configuration.m_blendInSeconds;
+        // A paused initial preview must have visible weight; EMotion FX advances blending with motion time.
+        playback.m_blendInTime = configuration.m_playbackSpeed == 0.0f ? 0.0f : configuration.m_blendInSeconds;
         playback.m_playNow = true;
         playback.m_deleteOnZeroWeight = false;
         playback.m_canOverwrite = false;
@@ -363,6 +338,11 @@ namespace Wanted::ScriptMotion::O3DE
         if (EMotionFX::MotionInstance* live = GetLiveInstance())
         {
             live->SetPlaySpeed(speed);
+            if (speed == 0.0f)
+            {
+                live->SetWeight(1.0f, 0.0f);
+                m_actor->UpdateTransformations(0.0f, true, true);
+            }
             m_error.clear();
             return true;
         }
@@ -377,8 +357,12 @@ namespace Wanted::ScriptMotion::O3DE
         }
         if (EMotionFX::MotionInstance* live = GetLiveInstance())
         {
-            // Reset last time so scrubbing does not emit events from the skipped interval.
+            // Clear the finished loop/frozen state as well as last time. A finished non-looping
+            // motion otherwise stays frozen when scrubbed back. Skipped events are not emitted.
+            live->ResetTimes();
             live->SetCurrentTime(timeSeconds, true);
+            live->SetWeight(1.0f, 0.0f);
+            m_actor->UpdateTransformations(0.0f, true, true);
             m_error.clear();
             return true;
         }

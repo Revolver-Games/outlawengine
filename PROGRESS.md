@@ -1,5 +1,16 @@
 # Wanted Engine progress — 2026-10-08
 
+> Latest follow-up (2026-10-09): `feature/scriptmotion-actor-preview` adds a shared
+> tested native bake, Actor-bind mode, editor pause/seek fixes and an original
+> skinned courier source with matching animation. Windows Debug and Release each
+> pass 67 unit tests and 3/3 CTest checks; existing mission tests pass 20 assertions;
+> 6 Python asset checks pass. Blender source skinning was verified. Native O3DE
+> configuration is blocked on missing isolated dependencies; native/editor build,
+> Asset Processor import and gameplay remain unverified. Full results, failed
+> attempts, source review and next steps are in
+> `Documentation/Validation/scriptmotion-actor-preview.md`. The historical report
+> below is preserved; its Windows-access statement predates this follow-up.
+
 ## Repository and environment
 
 - Genuine upstream `https://github.com/o3de/o3de.git` cloned at `e0315902af47533267f273835b99d28b96c76e32` (upstream development commit dated 2026-10-08).

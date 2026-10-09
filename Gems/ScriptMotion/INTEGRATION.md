@@ -1,5 +1,10 @@
 # ScriptMotion O3DE integration status
 
+The 2026-10-09 follow-up is documented in [ACTOR_PREVIEW.md](ACTOR_PREVIEW.md).
+It adds the shared portable bake, optional Actor-derived bind rig, pause/resume
+and seek fixes, native test sources, and an original skinned glTF courier.
+Windows portable tests pass; native compilation and editor acceptance remain pending.
+
 The portable core is compiled and tested. The CMake Gem, runtime adapter, EBus and editor component are **implemented source that has not been compiled or run against a complete O3DE build**.
 
 The adapter reads bounded skeleton/clip JSON through O3DE FileIO, validates a matching Actor's bone count/names/parents/bind pose, evaluates sampled poses, fills `EMotionFX::NonUniformMotionData`, creates an `EMotionFX::Motion`, and starts it through the Actor's MotionSystem. Events become native MotionEventTrack/TwoStringEventData entries. Activation/deactivation follows ActorComponentNotificationBus. Stop removes its own live motion instance before releasing its owned motion.
@@ -8,7 +13,8 @@ Editor controls configure source paths, loop, speed, blend-in and bake sample ra
 
 ## Restrictions
 
-- Exact compatible rig required; no automatic retargeting. Bind translation and rotation are checked and non-unit bind scales rejected.
+- Exact compatible rig required, or opt into capturing the loaded Actor's bind rig;
+  no automatic retargeting. Bind translation and rotation are checked and non-unit bind scales rejected.
 - Uses simple motion playback; refuses Actors driven by an active Animation Graph and declares incompatible services.
 - Core step interpolation is not supported by the initial native adapter; discontinuous segments are explicitly rejected.
 - Linear/smoothstep clips are sampled at configurable 30–240 Hz (default 120), plus authored key times. Native float interpolation approximates the portable evaluator between samples.

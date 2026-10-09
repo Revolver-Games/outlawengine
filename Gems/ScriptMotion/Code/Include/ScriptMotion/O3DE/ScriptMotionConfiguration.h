@@ -18,6 +18,9 @@ namespace Wanted::ScriptMotion::O3DE
         // FileIO aliases are supported, e.g. @projectroot@/Assets/ScriptMotion/test.skeleton.json.
         AZStd::string m_skeletonPath;
         AZStd::string m_clipPath;
+        // Opt-in: use the loaded Actor's exact rig instead of a separate skeleton file.
+        bool m_useActorBindPose = false;
+        AZStd::string m_actorSkeletonName = "courier_gltf";
         bool m_playOnActivation = true;
         bool m_loop = true;
         float m_playbackSpeed = 1.0f;

@@ -31,6 +31,18 @@ ly_create_alias(NAME ScriptMotion.Servers NAMESPACE Gem TARGETS ScriptMotion)
 ly_create_alias(NAME ScriptMotion.Unified NAMESPACE Gem TARGETS ScriptMotion)
 o3de_add_variant_dependencies_for_gem_dependencies(GEM_NAME ScriptMotion VARIANTS Clients Servers Unified)
 
+if(PAL_TRAIT_BUILD_TESTS_SUPPORTED)
+    ly_add_target(
+        NAME ScriptMotion.Native.Tests ${PAL_TRAIT_TEST_TARGET_TYPE}
+        NAMESPACE Gem
+        FILES_CMAKE scriptmotion_native_tests_files.cmake
+        INCLUDE_DIRECTORIES PRIVATE Source ${LY_ROOT_FOLDER}/Gems/EMotionFX/Code
+        BUILD_DEPENDENCIES PRIVATE Gem::ScriptMotion.Static Gem::EMotionFX.Static AZ::AzTest AZ::AzTestShared
+    )
+    target_compile_features(ScriptMotion.Native.Tests PRIVATE cxx_std_20)
+    ly_add_googletest(NAME Gem::ScriptMotion.Native.Tests)
+endif()
+
 if(PAL_TRAIT_BUILD_HOST_TOOLS)
     ly_add_target(
         NAME ScriptMotion.Editor GEM_MODULE

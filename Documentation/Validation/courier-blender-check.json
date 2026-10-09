@@ -1,0 +1,11 @@
+{
+  "blender_version": "5.2.1 LTS",
+  "joints": 7,
+  "mesh_objects": 1,
+  "vertices": 432,
+  "weights_normalized": true,
+  "bind_height_m": 2.0999996662139893,
+  "core_sample_seconds": 1.0,
+  "max_vertex_displacement_m": 0.8384157028923974,
+  "o3de_import_or_playback_verified": false
+}

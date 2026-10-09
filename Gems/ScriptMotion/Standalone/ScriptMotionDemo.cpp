@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  */
 #include <ScriptMotion/ScriptMotion.h>
+#include <ScriptMotion/MotionBake.h>
 #include <charconv>
 #include <fstream>
 #include <iomanip>
@@ -29,13 +30,13 @@ static SM::Result<std::string> ReadText(const char* path)
 
 int main(int argc, char** argv)
 {
-    if (argc < 3 || argc > 4)
+    if (argc < 3 || argc > 5 || (argc == 5 && std::string_view(argv[4]) != "--bake"))
     {
-        std::cerr << "Usage: scriptmotion_demo skeleton.json clip.scriptmotion.json [timeline_seconds]\n";
+        std::cerr << "Usage: scriptmotion_demo skeleton.json clip.scriptmotion.json [timeline_seconds [--bake]]\n";
         return 2;
     }
     double time = 1.0;
-    if (argc == 4)
+    if (argc >= 4)
     {
         const std::string_view text(argv[3]);
         const auto parsed = std::from_chars(text.data(), text.data() + text.size(), time);
@@ -56,6 +57,13 @@ int main(int argc, char** argv)
     if (!skeleton) { std::cerr << skeleton.error << '\n'; return 1; }
     auto clip = SM::ParseClip(clipText.value, skeleton.value);
     if (!clip) { std::cerr << clip.error << '\n'; return 1; }
+    if (argc == 5)
+    {
+        const auto baked = SM::BakeMotion(clip.value, skeleton.value);
+        if (!baked) { std::cerr << baked.error << '\n'; return 1; }
+        std::cout << "Native bake: samples=" << baked.value.times.size()
+            << " joints=" << skeleton.value.bones.size() << " rate=" << baked.value.sampleRate << '\n';
+    }
     auto pose = SM::EvaluatePose(clip.value, skeleton.value, time);
     auto sampleTime = SM::ResolveSampleTime(clip.value, time);
     if (!pose || !sampleTime)
