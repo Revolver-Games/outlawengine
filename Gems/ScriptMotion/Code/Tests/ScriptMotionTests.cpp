@@ -647,6 +647,65 @@ namespace
             Reject(SM::ApplyAdditiveLayer(pose, pose, SM::Pose{}, 0.5));
         });
 
+        add("model_space.parent_rotation_and_translation", []
+        {
+            const auto skeleton = TestSkeleton();
+            SM::Pose local{{
+                {{10, 0, 0}, {0, 0, std::sqrt(0.5), std::sqrt(0.5)}},
+                {{0, 2, 0}, {}},
+                {{1, 0, 0}, {}}
+            }};
+            const auto model = Must(SM::ComputeModelSpacePose(skeleton, local));
+            VectorNear(model.localTransforms[0].translation, {10, 0, 0});
+            VectorNear(model.localTransforms[1].translation, {8, 0, 0});
+            VectorNear(model.localTransforms[2].translation, {8, 1, 0});
+            RotationNear(model.localTransforms[2].rotation, local.localTransforms[0].rotation);
+        });
+
+        add("model_space.unordered_parent_indices", []
+        {
+            SM::Skeleton skeleton{"unordered", {
+                {"leaf", 1, {}},
+                {"middle", 2, {}},
+                {"root", -1, {}}
+            }};
+            SM::Pose local{{
+                {{1, 0, 0}, {}},
+                {{2, 0, 0}, {}},
+                {{3, 0, 0}, {}}
+            }};
+            const auto model = Must(SM::ComputeModelSpacePose(skeleton, local));
+            VectorNear(model.localTransforms[0].translation, {6, 0, 0});
+            VectorNear(model.localTransforms[1].translation, {5, 0, 0});
+            VectorNear(model.localTransforms[2].translation, {3, 0, 0});
+        });
+
+        add("model_space.rejects_invalid_pose_or_skeleton", []
+        {
+            auto skeleton = TestSkeleton();
+            Reject(SM::ComputeModelSpacePose(skeleton, SM::Pose{}));
+            SM::Pose pose{{SM::LocalTransform{}, SM::LocalTransform{}, SM::LocalTransform{}}};
+            pose.localTransforms[0].translation.x = std::numeric_limits<double>::infinity();
+            Reject(SM::ComputeModelSpacePose(skeleton, pose));
+            pose.localTransforms[0].translation.x = 0;
+            skeleton.bones[0].parent = 2;
+            Reject(SM::ComputeModelSpacePose(skeleton, pose));
+        });
+
+        add("model_space.clip_integration_matches_local_assembly", []
+        {
+            const auto skeleton = TestSkeleton();
+            const auto clip = TestClip();
+            const auto local = Must(SM::EvaluatePose(clip, skeleton, 0.5, {1, false}));
+            const auto a = Must(SM::ComputeModelSpacePose(skeleton, local));
+            const auto b = Must(SM::EvaluateModelSpacePose(clip, skeleton, 0.5, {1, false}));
+            for (std::size_t i = 0; i < skeleton.bones.size(); ++i)
+            {
+                VectorNear(a.localTransforms[i].translation, b.localTransforms[i].translation);
+                RotationNear(a.localTransforms[i].rotation, b.localTransforms[i].rotation);
+            }
+        });
+
         return tests;
     }
 }

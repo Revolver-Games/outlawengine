@@ -75,6 +75,11 @@ namespace Wanted::ScriptMotion
     // Additive rotation delta is layer * inverse(reference), applied on the left of base in parent space.
     [[nodiscard]] Result<Pose> ApplyAdditiveLayer(const Pose& base, const Pose& layer, const Pose& reference,
         double weight, std::span<const double> boneMask = {});
+    // Compose local bone transforms into model space (parent rotation and translation).
+    // The returned Pose uses the same bone order as the input skeleton; no bind-pose inverse is applied.
+    [[nodiscard]] Result<Pose> ComputeModelSpacePose(const Skeleton& skeleton, const Pose& localPose);
+    [[nodiscard]] Result<Pose> EvaluateModelSpacePose(const Clip& clip, const Skeleton& skeleton,
+        double timelineSeconds, PlaybackOptions options = {});
     // Low-level math primitive: both rotations must be finite/nonzero and alpha must be in [0,1].
     // Prefer the validated pose APIs when accepting untrusted caller data.
     [[nodiscard]] Quaternion Slerp(Quaternion from, Quaternion to, double alpha);
