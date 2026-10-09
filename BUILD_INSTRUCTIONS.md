@@ -1,59 +1,71 @@
-# Wanted Engine build instructions
+# Outlaw Engine build instructions
 
-## Tested portable milestone
+Repository: https://github.com/Revolver-Games/outlawengine, branch `development`.
+Keep work on feature branches and PRs; do not push to the upstream O3DE repository.
+Preserve existing changes and inspect the current branch before switching.
 
-The ScriptMotion core and Wanted mission tests need a C++20 compiler and CMake. Ninja is optional; omit `-G Ninja` to use an installed native generator. They do not require the full O3DE SDK, graphics hardware, or network access. ScriptMotion's JSON dependency is vendored with its MIT license.
+## Verified portable targets
 
-From the engine repository root:
-
-```sh
-cmake -S Gems/ScriptMotion/Standalone -B build/wanted-scriptmotion -G Ninja -DCMAKE_BUILD_TYPE=Debug
-cmake --build build/wanted-scriptmotion --parallel 2
-ctest --test-dir build/wanted-scriptmotion --output-on-failure
-
-cmake -S Projects/Wanted/Tests -B build/wanted-mission -G Ninja -DCMAKE_BUILD_TYPE=Debug
-cmake --build build/wanted-mission --parallel 2
-ctest --test-dir build/wanted-mission --output-on-failure
-
-build/wanted-scriptmotion/scriptmotion_demo Gems/ScriptMotion/Examples/wanted_test_skeleton.json Gems/ScriptMotion/Examples/frontier_wave.scriptmotion.json 1.0
-```
-
-The demo prints evaluated bone transforms and animation event occurrences. It is a command-line animation-data demonstration, not a rendered/skinned character.
-
-For Visual Studio 2022, replace the generator with `-G "Visual Studio 17 2022" -A x64`, build with `--config Debug`, and run CTest with `-C Debug`. The demo executable is then `build/wanted-scriptmotion/Debug/scriptmotion_demo.exe`. Windows compilation is not yet verified.
-
-Address/undefined-behavior checking on supported GCC/Clang:
-
-```sh
-cmake -S Gems/ScriptMotion/Standalone -B build/wanted-scriptmotion-asan -G Ninja -DCMAKE_BUILD_TYPE=Debug -DSCRIPTMOTION_SANITIZERS=ON
-cmake --build build/wanted-scriptmotion-asan --parallel 2
-ctest --test-dir build/wanted-scriptmotion-asan --output-on-failure
-```
-
-In this restricted container, LeakSanitizer cannot inspect `/proc/2/task`. The recorded successful ASan/UBSan run therefore used `ASAN_OPTIONS=detect_leaks=0:halt_on_error=1` and `UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1`. This does not verify memory leaks.
-
-
-## Windows source checkout
-
-Windows was not accessible in this session. No Windows hardware or installation claim is made. Run the read-only inventory from the intended checkout:
+A C++20 compiler and CMake are sufficient. The vendored JSON dependency retains
+its MIT license. The following commands use an already configured compiler shell:
 
 ```powershell
-python scripts/wanted/preflight.py --workspace C:\WantedDevelopment --output C:\WantedDevelopment\Documentation\windows-preflight.json
+cmake -S Gems/ScriptMotion/Standalone -B build/scriptmotion -G "Ninja Multi-Config"
+cmake --build build/scriptmotion --config Debug --parallel 2
+ctest --test-dir build/scriptmotion -C Debug --output-on-failure
+cmake --build build/scriptmotion --config Release --parallel 2
+ctest --test-dir build/scriptmotion -C Release --output-on-failure
+cmake -S Projects/Wanted/Tests -B build/mission -G "Ninja Multi-Config"
+cmake --build build/mission --config Debug --parallel 2
+ctest --test-dir build/mission -C Debug --output-on-failure
+python -m unittest discover -s Gems/ScriptMotion/Examples/Tools -p "test_*asset.py" -v
 ```
 
-The GitHub connection identified `arOSProject`; fork creation did not complete. Once an actual `arOSProject/WantedEngine` fork exists and its upstream relationship has been verified, these are the intended commands (not commands already executed here):
+Windows MSVC 19.51 + SDK 10.0.22621.0 with CMake 4.4.2/Ninja were executed in
+this session: Debug/Release each pass 8/8 ScriptMotion CTest checks; the original
+mission passes 1/1; asset checks pass 11/11. See the dated validation reports.
+For a single-config Linux build use `-G Ninja -DCMAKE_BUILD_TYPE=Debug` and omit
+`--config`/`-C`. New runtime changes have not been tested on Linux this session.
+
+`scriptmotion_demo` evaluates/bakes a clip; `scriptmotion_player` executes the
+idle/walk/greeting sequence. See `Gems/ScriptMotion/PLAYER.md` for arguments and
+the distinction between portable playback and native animation.
+
+## Full O3DE build — still unverified
+
+Read the [official requirements](https://docs.o3de.org/docs/welcome-guide/requirements/)
+and [Windows source setup](https://docs.o3de.org/docs/welcome-guide/setup/setup-from-github/building-windows/).
+Source builds require substantial package/LFS/build storage (100+ GB free in the
+published requirements) and about 2 GB RAM per compile thread beyond applications.
+This machine had only 46.65 GiB disk and 1.60 GiB available RAM at inspection.
+
+With sufficient resources and an installed supported Visual Studio/SDK:
 
 ```powershell
-New-Item -ItemType Directory -Force C:\WantedDevelopment
-Set-Location C:\WantedDevelopment
-git clone https://github.com/arOSProject/WantedEngine.git WantedEngine
-Set-Location WantedEngine
-git remote add upstream https://github.com/o3de/o3de.git
 git lfs install --local
-git switch wanted-development
 git lfs pull
+# Standard upstream setup writes the user's .o3de/Python cache:
+python/get_python.bat
+cmake -S . -B build/windows -G "Visual Studio 18 2026" -A x64 -DLY_PROJECTS=Projects/Wanted -DLY_3RDPARTY_PATH=<workspace>/Packages
+cmake --build build/windows --config profile --target ScriptMotion ScriptMotion.Editor ScriptMotion.Native.Tests Editor AssetProcessor Wanted.GameLauncher --parallel 1
 ```
 
+Those full setup/build commands are instructions, not successful results. Choose
+the generator matching the installed VS version (2022 uses `Visual Studio 17 2022`).
+The standard engine Python setup modifies a user cache outside this task's
+workspace; do not modify system settings or replace a user's existing environment.
+Use explicit permission where required by the current workspace constraints.
+
+Current isolated root configure fails before target generation because zlib and
+Freetype packages are absent. Downloads were disabled in that bounded probe; no
+claim that online provisioning is impossible is made. Native runtime/editor/test
+compilation, Asset Processor and launcher have not succeeded here.
+
+After native compilation, run the ScriptMotion native tests using O3DE's registered
+CTest target, process the source glTF in Asset Processor and follow
+`Gems/ScriptMotion/ACTOR_PREVIEW.md`. Verify visible playback in Editor and launcher.
+DefaultLevel remains the original template; it is not the completed Mercy Crossing
+playable scene. No workflow changes are needed for these local commands.
 Only switch to `wanted-development` after the delivered commits have been published or restored from the milestone bundle. If the checkout already exists, inspect it instead of cloning over it. Do not reset, clean, force-push, or overwrite unrelated work. The source uses LFS; no Git submodules exist at the pinned base. There is no reason to invent or initialize unrelated submodules.
 
 The development base is `e0315902af47533267f273835b99d28b96c76e32` from O3DE's `development` branch. Preserve that base when applying an incremental milestone bundle. The initial container clone used `GIT_LFS_SKIP_SMUDGE=1`; only DefaultProject template binary assets were hydrated. A full editor build needs the relevant remaining upstream LFS assets and O3DE packages.

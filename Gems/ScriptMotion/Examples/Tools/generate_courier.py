@@ -104,16 +104,27 @@ def generate(skeleton):
     box((0, -0.141, 1.32), (0.13, 0.025, 0.36), "spine", "shirt")
     box((0, 0, 0.94), (0.43, 0.28, 0.10), "pelvis", "leather")
     for x in (-0.12, 0.12):
-        box((x, 0, 0.55), (0.17, 0.21, 0.7), "pelvis", "trousers")
-        box((x, -0.05, 0.12), (0.19, 0.34, 0.24), "root", "leather")
+        side = "l" if x < 0 else "r"
+        if "thigh_" + side in names:
+            box((x, 0, 0.72), (0.17, 0.21, 0.36), "thigh_" + side, "trousers")
+            box((x, 0, 0.35), (0.15, 0.20, 0.36), "shin_" + side, "trousers")
+            box((x, -0.05, 0.12), (0.19, 0.34, 0.24), "foot_" + side, "leather")
+        else:
+            box((x, 0, 0.55), (0.17, 0.21, 0.7), "pelvis", "trousers")
+            box((x, -0.05, 0.12), (0.19, 0.34, 0.24), "root", "leather")
     box((0, 0, 1.58), (0.12, 0.14, 0.18), "head", "skin")
     box((0, 0, 1.76), (0.26, 0.25, 0.30), "head", "skin")
     box((0, 0, 1.94), (0.54, 0.47, 0.035), "head", "leather")
     box((0, 0, 2.025), (0.31, 0.3, 0.15), "head", "leather")
     for x in (-0.065, 0.065):
         box((x, -0.131, 1.80), (0.045, 0.012, 0.03), "head", "eyes")
-    box((-0.30, 0, 1.29), (0.14, 0.21, 0.52), "spine", "coat")
-    box((-0.30, 0, 0.99), (0.13, 0.14, 0.14), "spine", "skin")
+    if "upperarm_l" in names:
+        box((-0.34, 0, 1.55), (0.28, 0.18, 0.18), "upperarm_l", "coat")
+        box((-0.605, 0, 1.55), (0.25, 0.15, 0.15), "forearm_l", "shirt")
+        box((-0.795, 0, 1.55), (0.13, 0.14, 0.12), "hand_l", "skin")
+    else:
+        box((-0.30, 0, 1.29), (0.14, 0.21, 0.52), "spine", "coat")
+        box((-0.30, 0, 0.99), (0.13, 0.14, 0.14), "spine", "skin")
     box((0.34, 0, 1.55), (0.28, 0.18, 0.18), "upperarm_r", "coat")
     box((0.605, 0, 1.55), (0.25, 0.15, 0.15), "forearm_r", "shirt")
     box((0.795, 0, 1.55), (0.13, 0.14, 0.12), "hand_r", "skin")

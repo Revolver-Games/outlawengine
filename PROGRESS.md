@@ -1,3 +1,12 @@
+# Current slice — ScriptMotion runtime (2026-10-09)
+
+PR #3 is merged. New owning playback, masked/additive layers, crossfades and root
+translation are compiled and tested portably, with original idle/walk/greeting
+assets. Debug/Release each pass 8/8 CTest; 85 new playback assertions and 67 existing
+cases pass; 11 asset checks pass. Native O3DE/visible playback remain blocked by
+dependency and host capacity gates. See `Documentation/Validation/scriptmotion-runtime.md`
+and `Gems/ScriptMotion/PLAYER.md`. Earlier reports below are historical.
+
 # Wanted Engine progress — 2026-10-08
 
 > Latest follow-up (2026-10-09): `feature/scriptmotion-actor-preview` adds a shared

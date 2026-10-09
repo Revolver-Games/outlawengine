@@ -1,0 +1,254 @@
+{
+  "formatVersion": 1,
+  "name": "courier_greeting",
+  "skeleton": "courier_locomotion",
+  "duration": 2.0,
+  "tracks": [
+    {
+      "bone": "spine",
+      "keys": [
+        {
+          "time": 0.0,
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1.0,
+          "rotation": [
+            0,
+            0.0436193874,
+            0,
+            0.9990482216
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 2.0,
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "bone": "upperarm_r",
+      "keys": [
+        {
+          "time": 0.0,
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.5,
+          "rotation": [
+            0,
+            0,
+            0.5,
+            0.8660254038
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1.5,
+          "rotation": [
+            0,
+            0,
+            0.5,
+            0.8660254038
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 2.0,
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "bone": "forearm_r",
+      "keys": [
+        {
+          "time": 0.0,
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.5,
+          "rotation": [
+            0,
+            0,
+            0.2588190451,
+            0.9659258263
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1.5,
+          "rotation": [
+            0,
+            0,
+            0.2588190451,
+            0.9659258263
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 2.0,
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "bone": "hand_r",
+      "keys": [
+        {
+          "time": 0.0,
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.5,
+          "rotation": [
+            0,
+            -0.1736481777,
+            0,
+            0.984807753
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.75,
+          "rotation": [
+            0,
+            0.1736481777,
+            0,
+            0.984807753
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1.0,
+          "rotation": [
+            0,
+            -0.1736481777,
+            0,
+            0.984807753
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1.25,
+          "rotation": [
+            0,
+            0.1736481777,
+            0,
+            0.984807753
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1.5,
+          "rotation": [
+            0,
+            -0.1736481777,
+            0,
+            0.984807753
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 2.0,
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "bone": "upperarm_l",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            -0.2,
+            0.25,
+            0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.6087614290087207,
+            0.7933533402912352
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 2.0,
+          "translation": [
+            -0.2,
+            0.25,
+            0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.6087614290087207,
+            0.7933533402912352
+          ],
+          "interpolation": "smoothstep"
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "time": 0.5,
+      "name": "greeting_begin",
+      "payload": {
+        "speaker": "Ada Mercer",
+        "subtitle": "Afternoon. I could use a hand."
+      }
+    },
+    {
+      "time": 1.5,
+      "name": "greeting_end",
+      "payload": {}
+    }
+  ]
+}

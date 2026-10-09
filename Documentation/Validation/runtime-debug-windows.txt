@@ -1,0 +1,223 @@
+UpdateCTestConfiguration  from :<workspace>/work/build-native/DartConfiguration.tcl
+Parse Config file:<workspace>/work/build-native/DartConfiguration.tcl
+Test project <workspace>/work/build-native
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: ScriptMotionBake_idle
+
+1: Test command: <workspace>\work\build-native\Debug\scriptmotion_demo.exe "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/locomotion.skeleton.json" "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/idle.scriptmotion.json" "0.25" "--bake"
+1: Working Directory: <workspace>/work/build-native
+1: Test timeout computed to be: 1500
+1: Native bake: samples=481 joints=16 rate=120
+1: ScriptMotion courier_idle_breathing: timeline=0.250000 sample=0.250000 bones=16
+1: root translation=[0.000000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+1: pelvis translation=[0.000000,0.950000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+1: spine translation=[0.000000,0.350000,0.000000] rotation=[0.000562,0.000000,0.000000,1.000000]
+1: head translation=[0.000000,0.400000,0.000000] rotation=[-0.000375,0.000000,0.000000,1.000000]
+1: upperarm_r translation=[0.200000,0.250000,0.000000] rotation=[-0.000000,-0.000000,-0.608166,0.793810]
+1: forearm_r translation=[0.280000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+1: hand_r translation=[0.250000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+1: upperarm_l translation=[-0.200000,0.250000,0.000000] rotation=[0.000000,0.000000,0.608166,0.793810]
+1: forearm_l translation=[-0.280000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+1: hand_l translation=[-0.250000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+1: thigh_l translation=[-0.120000,-0.050000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+1: shin_l translation=[0.000000,-0.400000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+1: foot_l translation=[0.000000,-0.400000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+1: thigh_r translation=[0.120000,-0.050000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+1: shin_r translation=[0.000000,-0.400000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+1: foot_r translation=[0.000000,-0.400000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+1/8 Test #1: ScriptMotionBake_idle ............   Passed    0.03 sec
+test 2
+    Start 2: ScriptMotionBake_walk
+
+2: Test command: <workspace>\work\build-native\Debug\scriptmotion_demo.exe "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/locomotion.skeleton.json" "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/walk.scriptmotion.json" "0.25" "--bake"
+2: Working Directory: <workspace>/work/build-native
+2: Test timeout computed to be: 1500
+2: Native bake: samples=121 joints=16 rate=120
+2: ScriptMotion courier_walk: timeline=0.250000 sample=0.250000 bones=16
+2: root translation=[0.000000,0.000000,0.300000] rotation=[0.000000,0.000000,0.000000,1.000000]
+2: pelvis translation=[0.000000,0.950000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+2: spine translation=[0.000000,0.350000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+2: head translation=[0.000000,0.400000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+2: upperarm_r translation=[0.200000,0.250000,0.000000] rotation=[-0.000000,-0.000000,-0.608761,0.793353]
+2: forearm_r translation=[0.280000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+2: hand_r translation=[0.250000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+2: upperarm_l translation=[-0.200000,0.250000,0.000000] rotation=[0.000000,0.000000,0.608761,0.793353]
+2: forearm_l translation=[-0.280000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+2: hand_l translation=[-0.250000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+2: thigh_l translation=[-0.120000,-0.050000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+2: shin_l translation=[0.000000,-0.400000,0.000000] rotation=[0.382683,0.000000,0.000000,0.923880]
+2: foot_l translation=[0.000000,-0.400000,0.000000] rotation=[-0.216440,-0.000000,-0.000000,0.976296]
+2: thigh_r translation=[0.120000,-0.050000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+2: shin_r translation=[0.000000,-0.400000,0.000000] rotation=[0.043619,0.000000,0.000000,0.999048]
+2: foot_r translation=[0.000000,-0.400000,0.000000] rotation=[-0.043619,-0.000000,-0.000000,0.999048]
+2: event 0.250000 footstep {"foot":"left"}
+2/8 Test #2: ScriptMotionBake_walk ............   Passed    0.02 sec
+test 3
+    Start 3: ScriptMotionBake_greeting
+
+3: Test command: <workspace>\work\build-native\Debug\scriptmotion_demo.exe "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/locomotion.skeleton.json" "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/greeting.scriptmotion.json" "0.25" "--bake"
+3: Working Directory: <workspace>/work/build-native
+3: Test timeout computed to be: 1500
+3: Native bake: samples=241 joints=16 rate=120
+3: ScriptMotion courier_greeting: timeline=0.250000 sample=0.250000 bones=16
+3: root translation=[0.000000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+3: pelvis translation=[0.000000,0.950000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+3: spine translation=[0.000000,0.350000,0.000000] rotation=[0.000000,0.006818,0.000000,0.999977]
+3: head translation=[0.000000,0.400000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+3: upperarm_r translation=[0.200000,0.250000,0.000000] rotation=[0.000000,0.000000,0.258819,0.965926]
+3: forearm_r translation=[0.280000,0.000000,0.000000] rotation=[0.000000,0.000000,0.130526,0.991445]
+3: hand_r translation=[0.250000,0.000000,0.000000] rotation=[0.000000,-0.087156,0.000000,0.996195]
+3: upperarm_l translation=[-0.200000,0.250000,0.000000] rotation=[0.000000,0.000000,0.608761,0.793353]
+3: forearm_l translation=[-0.280000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+3: hand_l translation=[-0.250000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+3: thigh_l translation=[-0.120000,-0.050000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+3: shin_l translation=[0.000000,-0.400000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+3: foot_l translation=[0.000000,-0.400000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+3: thigh_r translation=[0.120000,-0.050000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+3: shin_r translation=[0.000000,-0.400000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+3: foot_r translation=[0.000000,-0.400000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+3/8 Test #3: ScriptMotionBake_greeting ........   Passed    0.03 sec
+test 4
+    Start 4: ScriptMotionPlaybackSequence
+
+4: Test command: <workspace>\work\build-native\Debug\scriptmotion_player.exe "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/locomotion.skeleton.json" "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/idle.scriptmotion.json" "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/walk.scriptmotion.json" "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/greeting.scriptmotion.json"
+4: Working Directory: <workspace>/work/build-native
+4: Test timeout computed to be: 1500
+4: courier_walk event 0.25 footstep
+4: courier_walk event 0.75 footstep
+4: courier_walk event 1.25 footstep
+4: courier_walk event 1.75 footstep
+4: courier_walk event 2.25 footstep
+4: courier_walk event 2.75 footstep
+4: courier_walk event 3.25 footstep
+4: courier_walk event 3.75 footstep
+4: courier_greeting event 0.5 greeting_begin
+4: courier_greeting event 1.5 greeting_end
+4: 768 frames; walk distance=4.8m; footsteps=8; greeting completions=1
+4/8 Test #4: ScriptMotionPlaybackSequence .....   Passed    0.20 sec
+test 5
+    Start 5: ScriptMotionPlayerTests
+
+5: Test command: <workspace>\work\build-native\Debug\ScriptMotionPlayerTests.exe
+5: Working Directory: <workspace>/work/build-native
+5: Test timeout computed to be: 1500
+5: 85 playback assertions passed
+5/8 Test #5: ScriptMotionPlayerTests ..........   Passed    0.01 sec
+test 6
+    Start 6: ScriptMotionCoreTests
+
+6: Test command: <workspace>\work\build-native\Debug\ScriptMotionTests.exe
+6: Working Directory: <workspace>/work/build-native
+6: Test timeout computed to be: 1500
+6: PASS parse.skeleton_valid_parent_mapping
+6: PASS parse.clip_valid_track_events_payload
+6: PASS parse.defaults_and_bind_channel_fallback
+6: PASS parse.skeleton_identity_defaults
+6: PASS parse.normalizes_nonzero_quaternions
+6: PASS parse.rejects_malformed_or_wrong_root_json
+6: PASS parse.rejects_duplicate_keys
+6: PASS parse.rejects_unknown_fields
+6: PASS parse.rejects_unsupported_version_and_types
+6: PASS parse.rejects_missing_required_fields
+6: PASS parse.rejects_zero_or_wrong_size_transforms
+6: PASS parse.rejects_overflow_numeric_values
+6: PASS parse.rejects_duplicate_unknown_and_cyclic_bones
+6: PASS parse.rejects_wrong_skeleton_or_unknown_track
+6: PASS parse.rejects_invalid_duration_and_key_timing
+6: PASS parse.rejects_unknown_interpolation
+6: PASS parse.rejects_event_time_outside_clip
+6: PASS parse.rejects_oversized_document
+6: PASS parse.rejects_excessive_nesting_without_aborting
+6: PASS parse.unicode_escape_validation_and_decoding
+6: PASS validate.rejects_invalid_runtime_skeleton
+6: PASS validate.enforces_skeleton_bone_limit
+6: PASS validate.rejects_duplicate_tracks_and_keys
+6: PASS pose.linear_translation_and_slerp_midpoint
+6: PASS pose.exact_endpoints_and_bind_fallback
+6: PASS pose.step_changes_at_exact_key
+6: PASS pose.smoothstep_known_quarter_value
+6: PASS pose.single_key_and_sparse_endpoint_holds
+6: PASS pose.selects_interior_segment
+6: PASS pose.rejects_corrupt_programmatic_clip
+6: PASS slerp.shortest_path_270_to_minus90
+6: PASS slerp.opposite_sign_same_rotation_is_stable
+6: PASS slerp.nearly_identical_and_nonunit_inputs
+6: PASS time.loop_boundary_and_clamped_boundary
+6: PASS time.speed_and_pause
+6: PASS time.rejects_negative_nan_infinite_and_overflow
+6: PASS time.rejects_loop_counts_beyond_portable_precision
+6: PASS events.open_closed_interval_and_no_start_event
+6: PASS events.multiple_loops_and_shared_boundary_order
+6: PASS events.frame_partition_does_not_duplicate
+6: PASS events.speed_maps_back_to_wall_timeline
+6: PASS events.same_timestamp_preserves_author_order
+6: PASS events.budget_is_atomic
+6: PASS events.rejects_invalid_intervals_and_event_data
+6: PASS blend.weight_endpoints_midpoint_and_rotation
+6: PASS blend.mask_weights_independently
+6: PASS blend.rejects_shape_weight_and_nonfinite_pose
+6: PASS additive.translation_delta_and_identity_reference
+6: PASS additive.parent_space_rotation_order
+6: PASS additive.nonidentity_reference_and_mask
+6: PASS additive.rejects_mismatched_reference
+6: PASS model_space.parent_rotation_and_translation
+6: PASS model_space.unordered_parent_indices
+6: PASS model_space.rejects_invalid_pose_or_skeleton
+6: PASS model_space.clip_integration_matches_local_assembly
+6: PASS bake.endpoints_and_untracked_bind_joints
+6: PASS bake.includes_off_grid_authored_times
+6: PASS bake.final_pose_uses_exact_source_endpoint
+6: PASS bake.bind_only_and_single_key_clips
+6: PASS bake.smoothstep_native_linear_error_bound
+6: PASS bake.rejects_bad_rates_and_duration
+6: PASS bake.rejects_corrupt_skeleton_and_clip
+6: PASS bake.rejects_discontinuous_segments
+6: PASS bake.rejects_float_key_time_collision
+6: PASS bake.rejects_transform_budget_before_pose_allocation
+6: PASS bake.rejects_validation_work_budget
+6: PASS bake.counts_deep_hierarchy_validation_work
+6: 67 passed, 0 failed
+6/8 Test #6: ScriptMotionCoreTests ............   Passed    0.16 sec
+test 7
+    Start 7: ScriptMotionExample
+
+7: Test command: <workspace>\work\build-native\Debug\scriptmotion_demo.exe "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../Examples/wanted_test_skeleton.json" "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../Examples/frontier_wave.scriptmotion.json" "1.0"
+7: Working Directory: <workspace>/work/build-native
+7: Test timeout computed to be: 1500
+7: ScriptMotion frontier_wave: timeline=1.000000 sample=1.000000 bones=7
+7: root translation=[0.000000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+7: pelvis translation=[0.000000,0.000000,0.950000] rotation=[0.000000,0.000000,0.000000,1.000000]
+7: spine translation=[0.000000,0.000000,0.350000] rotation=[0.000000,0.000000,0.043619,0.999048]
+7: head translation=[0.000000,0.000000,0.400000] rotation=[0.000000,0.000000,0.000000,1.000000]
+7: upperarm_r translation=[0.200000,0.000000,0.250000] rotation=[0.000000,-0.500000,0.000000,0.866025]
+7: forearm_r translation=[0.280000,0.000000,0.000000] rotation=[0.000000,-0.258819,0.000000,0.965926]
+7: hand_r translation=[0.250000,0.000000,0.000000] rotation=[0.000000,0.000000,-0.173648,0.984808]
+7: event 0.500000 greeting_begin {"speaker":"rider","subtitle":"Afternoon, stranger."}
+7/8 Test #7: ScriptMotionExample ..............   Passed    0.01 sec
+test 8
+    Start 8: ScriptMotionCourierBake
+
+8: Test command: <workspace>\work\build-native\Debug\scriptmotion_demo.exe "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/courier.skeleton.json" "<workspace>/work/outlawengine/Gems/ScriptMotion/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/courier_wave.scriptmotion.json" "1.0" "--bake"
+8: Working Directory: <workspace>/work/build-native
+8: Test timeout computed to be: 1500
+8: Native bake: samples=241 joints=7 rate=120
+8: ScriptMotion courier_wave: timeline=1.000000 sample=1.000000 bones=7
+8: root translation=[0.000000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+8: pelvis translation=[0.000000,0.950000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+8: spine translation=[0.000000,0.350000,0.000000] rotation=[0.000000,0.043619,0.000000,0.999048]
+8: head translation=[0.000000,0.400000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+8: upperarm_r translation=[0.200000,0.250000,0.000000] rotation=[0.000000,0.000000,0.500000,0.866025]
+8: forearm_r translation=[0.280000,0.000000,0.000000] rotation=[0.000000,0.000000,0.258819,0.965926]
+8: hand_r translation=[0.250000,0.000000,0.000000] rotation=[0.000000,-0.173648,0.000000,0.984808]
+8: event 0.500000 greeting_begin {"speaker":"Ada Mercer","subtitle":"Afternoon. I could use a hand."}
+8/8 Test #8: ScriptMotionCourierBake ..........   Passed    0.01 sec
+
+100% tests passed out of 8
+
+Total Test time (real) =   0.50 sec

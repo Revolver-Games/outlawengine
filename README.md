@@ -1,11 +1,13 @@
-# Wanted Engine
+# Outlaw Engine
 
 Wanted Engine is an O3DE source-based development project for **WANTED**, an original Western game, and its planned online mode **WantedOn (WON)**.
 
-This checkout retains the genuine O3DE source and history. The initial development base is `e0315902af47533267f273835b99d28b96c76e32` on upstream `development`. The local working branch is `wanted-development`. The engine association identifier remains `o3de` for compatibility; Wanted-specific code is isolated in Gems and the game project.
+This checkout retains the genuine O3DE source and history. The initial development base is `e0315902af47533267f273835b99d28b96c76e32` on upstream `development`. The development branch is `development`; changes use separate feature PRs. The engine association identifier remains `o3de` for compatibility; Wanted-specific code is isolated in Gems and the game project.
 
-The first milestone contains a C++20 ScriptMotion parser and pose evaluator, automated tests, example animations, an EMotion FX adapter, and a generated Wanted project with a tested mission state machine. **The portable code has been compiled and tested; the EMotion FX adapter, editor, and game have not been compiled or launched in this environment.** This is an initial implementation, not a finished game or a playable level.
+The initial milestone contains a C++20 ScriptMotion parser and pose evaluator, automated tests, example animations, an EMotion FX adapter, and a generated Wanted project with a tested mission state machine. **The portable code has been compiled and tested; the EMotion FX adapter, editor, and game have not been compiled or launched in this environment.** This is an initial implementation, not a finished game or a playable level.
 
+- [Owning playback and three animation examples](Gems/ScriptMotion/PLAYER.md)
+- [Latest verification](Documentation/Validation/scriptmotion-runtime.md)
 - [Build instructions](BUILD_INSTRUCTIONS.md)
 - [Progress and verification](PROGRESS.md)
 - [Architecture and source map](ARCHITECTURE.md)

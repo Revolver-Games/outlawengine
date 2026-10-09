@@ -1,0 +1,63 @@
+-- Basic Configuration Information:
+   CMAKE_SYSTEM_NAME: Windows
+   CMAKE_VERSION: 4.4.2
+   CMAKE_COMMAND: C:/Tools/CMake/bin/cmake.exe
+   CMAKE_GENERATOR: Ninja Multi-Config
+   CMAKE_CXX_COMPILER_ID: MSVC
+   CMAKE_CXX_COMPILER_VERSION: 19.51.36256.0
+   O3DE_INSTALL_VERSION_STRING: 2.8.0
+   INSTALLED_ENGINE:
+-- Initializing O3DE CMake system...
+--   Using Windows SDK version 10.0.22621.0 to target Windows 10.0.26200
+--   Downloading package into <workspace>/work/o3de-dependencies/packages/zlib-1.2.11-rev5-windows
+CMake Error at cmake/3rdPartyPackages.cmake:263 (message):
+  ly_package: - LY_PACKAGE_SERVER_URLS is empty, cannot download packages.
+  enable LY_PACKAGE_DEBUG for details
+Call Stack (most recent call first):
+  cmake/3rdPartyPackages.cmake:531 (ly_package_internal_download_package)
+  cmake/3rdPartyPackages.cmake:621 (ly_force_download_package)
+  cmake/3rdPartyPackages.cmake:733 (ly_enable_package)
+  cmake/3rdParty/BuiltInPackages.cmake:29 (ly_download_associated_package)
+  cmake/3rdPartyPackages.cmake:754 (include)
+  cmake/LYPython.cmake:12 (include)
+  CMakeLists.txt:93 (include)
+
+
+--   Could NOT find ZLIB (missing: ZLIB_LIBRARY ZLIB_INCLUDE_DIR)
+CMake Error at cmake/3rdParty/BuiltInPackages.cmake:35 (add_library):
+  add_library cannot create ALIAS target "3rdParty::zlib" because target
+  "3rdParty::ZLIB" does not already exist.
+Call Stack (most recent call first):
+  cmake/3rdPartyPackages.cmake:754 (include)
+  cmake/LYPython.cmake:12 (include)
+  CMakeLists.txt:93 (include)
+
+
+--   Downloading package into <workspace>/work/o3de-dependencies/packages/freetype-2.11.1-rev1-windows
+CMake Error at cmake/3rdPartyPackages.cmake:263 (message):
+  ly_package: - LY_PACKAGE_SERVER_URLS is empty, cannot download packages.
+  enable LY_PACKAGE_DEBUG for details
+Call Stack (most recent call first):
+  cmake/3rdPartyPackages.cmake:531 (ly_package_internal_download_package)
+  cmake/3rdPartyPackages.cmake:621 (ly_force_download_package)
+  cmake/3rdPartyPackages.cmake:733 (ly_enable_package)
+  cmake/3rdParty.cmake:73 (ly_download_associated_package)
+  cmake/LYWrappers.cmake:636 (o3de_find_3rdparty_package)
+  cmake/3rdPartyPackages.cmake:761 (ly_parse_third_party_dependencies)
+  cmake/LYPython.cmake:12 (include)
+  CMakeLists.txt:93 (include)
+
+
+CMake Error at C:/Tools/CMake/share/cmake-4.4/Modules/FindPackageHandleStandardArgs.cmake:290 (message):
+  Could NOT find Freetype (missing: FREETYPE_LIBRARY FREETYPE_INCLUDE_DIRS)
+Call Stack (most recent call first):
+  C:/Tools/CMake/share/cmake-4.4/Modules/FindPackageHandleStandardArgs.cmake:654 (_FPHSA_FAILURE_MESSAGE)
+  C:/Tools/CMake/share/cmake-4.4/Modules/FindFreetype.cmake:218 (find_package_handle_standard_args)
+  cmake/3rdParty.cmake:74 (find_package)
+  cmake/LYWrappers.cmake:636 (o3de_find_3rdparty_package)
+  cmake/3rdPartyPackages.cmake:761 (ly_parse_third_party_dependencies)
+  cmake/LYPython.cmake:12 (include)
+  CMakeLists.txt:93 (include)
+
+
+-- Configuring incomplete, errors occurred!

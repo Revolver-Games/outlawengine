@@ -1,3 +1,12 @@
+# Current continuation — runtime slice (2026-10-09)
+
+Fetch development and check PR status first; PR #3 has merged. Preserve all local
+branches. Read `Documentation/Validation/scriptmotion-runtime.md`. Provision more
+build capacity and O3DE dependencies before claiming engine validation. The new
+portable Player is not wired to the EMotion FX graph or an editor panel. Continue
+with the authored CineScript/mission slice while native verification is unavailable.
+Earlier instructions below describe previous environments and branch states.
+
 # Latest continuation: ScriptMotion Actor preview (2026-10-09)
 
 Start with `Documentation/Validation/scriptmotion-actor-preview.md` and
