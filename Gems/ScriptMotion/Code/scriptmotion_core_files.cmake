@@ -3,5 +3,6 @@
 set(FILES
     Include/ScriptMotion/ScriptMotion.h
     Source/Core/ScriptMotion.cpp
+    Source/Core/PoseSpace.cpp
     Source/Core/ThirdParty/nlohmann/json.hpp
 )
