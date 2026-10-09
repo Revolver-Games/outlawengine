@@ -1,3 +1,13 @@
+# Latest continuation: ScriptMotion Actor preview (2026-10-09)
+
+Start with `Documentation/Validation/scriptmotion-actor-preview.md` and
+`Gems/ScriptMotion/ACTOR_PREVIEW.md`. The `feature/scriptmotion-actor-preview`
+slice has compiled Windows portable coverage and an original skinned courier.
+The immediate gate is a real O3DE build/import/editor run, followed by independent
+review into development. Do not treat source-only native tests or Blender output
+as a passed editor check. Keep workflows unchanged. The earlier handoff below
+is retained as historical context.
+
 # Resume Wanted Engine
 
 ## Locate the real work

@@ -41,8 +41,11 @@ namespace Wanted::ScriptMotion::O3DE
                     ->UIElement(AZ::Edit::UIHandlers::Button, "", "Reload edited JSON files and restart preview")
                     ->Attribute(AZ::Edit::Attributes::ButtonText, "Reload and preview")
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ScriptMotionEditorComponent::OnReloadPreview)
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ScriptMotionEditorComponent::m_paused,
+                        "Pause preview", "Pause or resume without reloading the sources or resetting the playhead")
+                    ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ScriptMotionEditorComponent::OnPauseChanged)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ScriptMotionEditorComponent::m_seekTime,
-                        "Seek seconds", "Seek without emitting events from the skipped interval; set speed to zero to hold")
+                        "Seek seconds", "Seek without emitting events from the skipped interval; enable Pause preview to hold")
                     ->Attribute(AZ::Edit::Attributes::Min, 0.0f)
                     ->Attribute(AZ::Edit::Attributes::ChangeNotify, &ScriptMotionEditorComponent::OnSeekChanged)
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ScriptMotionEditorComponent::m_status,
@@ -87,7 +90,11 @@ namespace Wanted::ScriptMotion::O3DE
         if (m_preview)
         {
             const bool success = m_playback->Play(m_configuration);
-            m_status = success ? "Playing native motion" : m_playback->GetLastError();
+            if (success && m_paused)
+            {
+                m_playback->SetPlaybackSpeed(0.0f);
+            }
+            m_status = success ? (m_paused ? "Preview paused" : "Playing native motion") : m_playback->GetLastError();
             AZ_Warning("ScriptMotion", success, "%s", m_status.c_str());
         }
         else
@@ -107,6 +114,13 @@ namespace Wanted::ScriptMotion::O3DE
     AZ::u32 ScriptMotionEditorComponent::OnSeekChanged()
     {
         m_status = m_playback->Seek(m_seekTime) ? "Seek applied" : m_playback->GetLastError();
+        return AZ::Edit::PropertyRefreshLevels::EntireTree;
+    }
+
+    AZ::u32 ScriptMotionEditorComponent::OnPauseChanged()
+    {
+        const bool success = m_playback->SetPlaybackSpeed(m_paused ? 0.0f : m_configuration.m_playbackSpeed);
+        m_status = success ? (m_paused ? "Preview paused" : "Preview resumed") : m_playback->GetLastError();
         return AZ::Edit::PropertyRefreshLevels::EntireTree;
     }
 }

@@ -1,5 +1,10 @@
 # ScriptMotion examples
 
+A new original skinned courier source is available in
+`Projects/Wanted/Assets/Characters/ScriptMotionCourier.gltf`, with a matching
+Y-up local clip in `Projects/Wanted/Assets/ScriptMotion`. The files below remain
+the original Z-up portable fixtures. See `../ACTOR_PREVIEW.md`; engine import is pending.
+
 The original seven-bone `wanted_test_humanoid` skeleton is a data-only test rig, in meters with Z up. It is not a skinned actor asset. `frontier_wave.scriptmotion.json` animates the spine and right arm while untracked bones retain their bind pose. The two-second loop includes timed greeting events.
 
 Version 1 accepts JSON only. Bone `parent` is another bone name or null. Parent order is unrestricted; missing parents, cycles, and duplicate names are rejected. Quaternions use `[x,y,z,w]` and are normalized when parsed. Translation is parent-local. Scale, retargeting, IK solving, and root-motion extraction are outside this initial core.

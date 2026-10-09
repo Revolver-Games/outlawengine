@@ -13,9 +13,11 @@ namespace Wanted::ScriptMotion::O3DE
         if (auto* serialize = azrtti_cast<AZ::SerializeContext*>(context))
         {
             serialize->Class<ScriptMotionConfiguration>()
-                ->Version(1)
+                ->Version(2)
                 ->Field("SkeletonPath", &ScriptMotionConfiguration::m_skeletonPath)
                 ->Field("ClipPath", &ScriptMotionConfiguration::m_clipPath)
+                ->Field("UseActorBindPose", &ScriptMotionConfiguration::m_useActorBindPose)
+                ->Field("ActorSkeletonName", &ScriptMotionConfiguration::m_actorSkeletonName)
                 ->Field("PlayOnActivation", &ScriptMotionConfiguration::m_playOnActivation)
                 ->Field("Loop", &ScriptMotionConfiguration::m_loop)
                 ->Field("PlaybackSpeed", &ScriptMotionConfiguration::m_playbackSpeed)
@@ -27,8 +29,12 @@ namespace Wanted::ScriptMotion::O3DE
                 edit->Class<ScriptMotionConfiguration>("ScriptMotion settings", "Source JSON and native motion playback")
                     ->ClassElement(AZ::Edit::ClassElements::EditorData, "")
                     ->Attribute(AZ::Edit::Attributes::AutoExpand, true)
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ScriptMotionConfiguration::m_useActorBindPose,
+                        "Use Actor bind pose", "Read the exact joints and bind transforms from the loaded Actor; ignore Skeleton JSON")
+                    ->DataElement(AZ::Edit::UIHandlers::Default, &ScriptMotionConfiguration::m_actorSkeletonName,
+                        "Actor skeleton name", "Must match the clip's skeleton field when Use Actor bind pose is enabled")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ScriptMotionConfiguration::m_skeletonPath,
-                        "Skeleton JSON", "FileIO path to validated ScriptMotion skeleton JSON")
+                        "Skeleton JSON", "FileIO path to validated skeleton JSON; unused when Use Actor bind pose is enabled")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ScriptMotionConfiguration::m_clipPath,
                         "Animation JSON", "FileIO path to ScriptMotion clip JSON")
                     ->DataElement(AZ::Edit::UIHandlers::Default, &ScriptMotionConfiguration::m_playOnActivation,

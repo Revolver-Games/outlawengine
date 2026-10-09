@@ -2,6 +2,12 @@
 
 This C++20 target compiles the same parser and pose evaluator used by the ScriptMotion Gem. It does **not** compile O3DE or validate the Gem's EMotion FX integration.
 
+It also compiles the shared `BakeMotion` implementation. Append `--bake` after
+the CLI time argument to validate a clip against native baking constraints and
+print its sample/joint counts. The courier CTest exercises this on the original
+rigged sample's matching source JSON. Native EMotion FX upload is still a
+separate verification boundary. See `../ACTOR_PREVIEW.md`.
+
 From the repository root:
 
 ```sh

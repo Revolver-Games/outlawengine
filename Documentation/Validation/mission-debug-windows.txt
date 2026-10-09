@@ -1,0 +1,20 @@
+UpdateCTestConfiguration  from :<workspace>/work/build-mission/DartConfiguration.tcl
+Test project <workspace>/work/build-mission
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: Wanted.FirstErrand
+
+1: Test command: <workspace>\work\build-mission\Debug\WantedFirstErrandTests.exe
+1: Working Directory: <workspace>/work/build-mission
+1: Test timeout computed to be: 30
+1: 20 mission assertions passed
+1/1 Test #1: Wanted.FirstErrand ...............   Passed    0.08 sec
+
+100% tests passed out of 1
+
+Total Test time (real) =   0.16 sec

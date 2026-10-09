@@ -3,6 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0 OR MIT
  */
 #include <ScriptMotion/ScriptMotion.h>
+#include <ScriptMotion/MotionBake.h>
+#include <algorithm>
+
+#ifdef _MSC_VER
+#include <crtdbg.h>
+#include <cstdlib>
+#endif
 
 #include <cmath>
 #include <exception>
@@ -706,12 +713,171 @@ namespace
             }
         });
 
+        add("bake.endpoints_and_untracked_bind_joints", []
+        {
+            const auto skeleton = TestSkeleton();
+            const auto bake = Must(SM::BakeMotion(TestClip(), skeleton, 30));
+            Require(bake.times.size() == 61 && bake.poses.size() == 61, "inclusive 30 Hz samples");
+            Near(bake.times.front(), 0, "first native time");
+            Near(bake.times.back(), 2, "last native time");
+            VectorNear(bake.poses[30].localTransforms[0].translation, {1, 2, 3});
+            RotationNear(bake.poses[30].localTransforms[0].rotation, {0, 0, std::sqrt(0.5), std::sqrt(0.5)});
+            VectorNear(bake.poses.back().localTransforms[0].translation, {2, 4, 6});
+            for (const auto& pose : bake.poses)
+            {
+                Require(pose.localTransforms.size() == 3, "all joints are uploaded");
+                VectorNear(pose.localTransforms[1].translation, skeleton.bones[1].bindPose.translation);
+                VectorNear(pose.localTransforms[2].translation, skeleton.bones[2].bindPose.translation);
+            }
+        });
+
+        add("bake.includes_off_grid_authored_times", []
+        {
+            auto clip = TestClip();
+            clip.tracks[0].keys.insert(clip.tracks[0].keys.begin() + 1, {0.123456, {{9, 0, 0}, {}}});
+            const auto bake = Must(SM::BakeMotion(clip, TestSkeleton(), 30));
+            Require(std::find(bake.times.begin(), bake.times.end(), static_cast<float>(0.123456)) != bake.times.end(),
+                "authored time is retained in native precision");
+            for (std::size_t i = 1; i < bake.times.size(); ++i)
+            {
+                Require(bake.times[i] > bake.times[i - 1], "native times strictly increase");
+            }
+        });
+
+        add("bake.final_pose_uses_exact_source_endpoint", []
+        {
+            auto clip = TestClip();
+            clip.duration = 1.00000001; // rounds down in native float
+            clip.tracks[0].keys.back().time = clip.duration;
+            clip.events.clear();
+            const auto bake = Must(SM::BakeMotion(clip, TestSkeleton(), 30));
+            VectorNear(bake.poses.back().localTransforms[0].translation, {2, 4, 6});
+            RotationNear(bake.poses.back().localTransforms[0].rotation, {0, 0, 1, 0});
+        });
+
+        add("bake.bind_only_and_single_key_clips", []
+        {
+            auto clip = TestClip();
+            clip.tracks.clear();
+            auto bake = Must(SM::BakeMotion(clip, TestSkeleton()));
+            VectorNear(bake.poses.back().localTransforms[2].translation, {1, 0, 0});
+            clip.tracks.push_back({0, {{0.7, {{4, 5, 6}, {}}, SM::Interpolation::Step}}});
+            bake = Must(SM::BakeMotion(clip, TestSkeleton()));
+            VectorNear(bake.poses.front().localTransforms[0].translation, {4, 5, 6});
+            VectorNear(bake.poses.back().localTransforms[0].translation, {4, 5, 6});
+        });
+
+        add("bake.smoothstep_native_linear_error_bound", []
+        {
+            auto clip = TestClip();
+            clip.tracks[0].keys[0].interpolation = SM::Interpolation::SmoothStep;
+            const auto bake = Must(SM::BakeMotion(clip, TestSkeleton(), 120));
+            // Independent analytic translation and linear reconstruction between native samples.
+            for (std::size_t i = 1; i < bake.times.size(); ++i)
+            {
+                const double time = (bake.times[i - 1] + static_cast<double>(bake.times[i])) * 0.5;
+                const double u = time / 2.0;
+                const double expectedX = 2.0 * u * u * (3.0 - 2.0 * u);
+                const double nativeX = (bake.poses[i - 1].localTransforms[0].translation.x
+                    + bake.poses[i].localTransforms[0].translation.x) * 0.5;
+                Near(nativeX, expectedX, "120 Hz smoothstep translation error", 0.00003);
+            }
+        });
+
+        add("bake.rejects_bad_rates_and_duration", []
+        {
+            for (float rate : {0.0f, 29.0f, 241.0f, std::numeric_limits<float>::quiet_NaN(),
+                    std::numeric_limits<float>::infinity()})
+            {
+                Reject(SM::BakeMotion(TestClip(), TestSkeleton(), rate));
+            }
+            auto clip = TestClip();
+            clip.duration = 601;
+            Reject(SM::BakeMotion(clip, TestSkeleton()));
+        });
+
+        add("bake.rejects_corrupt_skeleton_and_clip", []
+        {
+            Reject(SM::BakeMotion(TestClip(), {}));
+            auto clip = TestClip();
+            clip.tracks[0].boneIndex = 1000;
+            Reject(SM::BakeMotion(clip, TestSkeleton()));
+            auto skeleton = TestSkeleton();
+            skeleton.bones[0].parent = 2;
+            Reject(SM::BakeMotion(TestClip(), skeleton));
+        });
+
+        add("bake.rejects_discontinuous_segments", []
+        {
+            auto clip = TestClip();
+            clip.tracks[0].keys[0].interpolation = SM::Interpolation::Step;
+            const auto bake = SM::BakeMotion(clip, TestSkeleton());
+            Reject(bake);
+            Require(bake.value.times.empty() && bake.value.poses.empty(), "no partial bake on failure");
+        });
+
+        add("bake.rejects_float_key_time_collision", []
+        {
+            auto clip = TestClip();
+            clip.tracks[0].keys = {{1.0, {}}, {1.000000001, {{2, 0, 0}, {}}}};
+            Require(SM::ValidateClip(clip, TestSkeleton()).empty(), "valid in double precision");
+            Reject(SM::BakeMotion(clip, TestSkeleton()));
+        });
+
+        add("bake.rejects_transform_budget_before_pose_allocation", []
+        {
+            auto skeleton = TestSkeleton();
+            for (int i = 3; i < 100; ++i)
+            {
+                skeleton.bones.push_back({"bone_" + std::to_string(i), 0, {}});
+            }
+            auto clip = TestClip();
+            clip.duration = 600;
+            const auto bake = SM::BakeMotion(clip, skeleton, 240);
+            Reject(bake);
+            Require(bake.value.poses.empty(), "budget failure is atomic");
+            Require(bake.error.find("transform") != std::string::npos, "reports transform budget");
+        });
+
+        add("bake.rejects_validation_work_budget", []
+        {
+            auto clip = TestClip();
+            clip.duration = 600;
+            clip.tracks[0].keys.clear();
+            for (int i = 0; i < 1000; ++i)
+            {
+                clip.tracks[0].keys.push_back({i * 0.6, {}});
+            }
+            const auto bake = SM::BakeMotion(clip, TestSkeleton(), 120);
+            Reject(bake);
+            Require(bake.error.find("work budget") != std::string::npos, "reports validation-work budget");
+        });
+
+        add("bake.counts_deep_hierarchy_validation_work", []
+        {
+            auto skeleton = TestSkeleton();
+            for (int i = 3; i < 1000; ++i)
+            {
+                skeleton.bones.push_back({"bone_" + std::to_string(i), i - 1, {}});
+            }
+            const auto bake = SM::BakeMotion(TestClip(), skeleton, 120);
+            Reject(bake);
+            Require(bake.error.find("work budget") != std::string::npos, "deep ancestor walks count against the budget");
+        });
+
         return tests;
     }
 }
 
 int main(int argc, char** argv)
 {
+    // CI and command-line runs must report CRT failures instead of opening a modal dialog.
+#ifdef _MSC_VER
+    _set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
+    _CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
+    _CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
+#endif
+    std::cout << std::unitbuf;
     const auto tests = Tests();
     const std::string_view filter = argc > 1 ? argv[1] : "";
     if (filter == "--list")

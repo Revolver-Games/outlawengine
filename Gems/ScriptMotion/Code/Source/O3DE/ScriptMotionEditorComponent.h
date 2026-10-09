@@ -36,9 +36,11 @@ namespace Wanted::ScriptMotion::O3DE
         AZ::u32 OnSettingsChanged();
         AZ::u32 OnReloadPreview();
         AZ::u32 OnSeekChanged();
+        AZ::u32 OnPauseChanged();
 
         ScriptMotionConfiguration m_configuration;
         bool m_preview = false;
+        bool m_paused = false; // Editor-only transport state; never exported to game entities.
         float m_seekTime = 0.0f;
         AZStd::string m_status;
         AZStd::unique_ptr<ScriptMotionPlayback> m_playback;

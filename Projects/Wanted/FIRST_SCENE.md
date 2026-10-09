@@ -33,7 +33,10 @@ next editor task, not a claim that these entities exist in DefaultLevel.
    and ScriptMotion components to Ada, configure the skeleton and wave paths,
    then verify character validation and playback in both editor preview and
    runtime. Follow the Gem documentation; no matching Actor has been supplied
-   by this milestone.
+   by the original milestone. The follow-up now supplies an original skinned
+   glTF courier and matching joint-local JSON; follow
+   `Gems/ScriptMotion/ACTOR_PREVIEW.md` to process it as an Actor and verify
+   playback. O3DE import and the playable scene are still pending.
 8. Save the prefab and its owned assets. Point
    `Registry/load_level.setreg` to the new level only after standalone launcher
    verification. Record the exact engine build, asset processor results and
