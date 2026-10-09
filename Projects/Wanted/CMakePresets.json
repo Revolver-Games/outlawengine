@@ -1,0 +1,63 @@
+{
+    "version": 4,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 25,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "wanted-windows",
+            "displayName": "WANTED / Windows / Visual Studio 2022",
+            "generator": "Visual Studio 17 2022",
+            "architecture": "x64",
+            "binaryDir": "${sourceDir}/build/windows",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "cacheVariables": {
+                "CMAKE_MODULE_PATH": "${sourceDir}/../../cmake",
+                "LY_3RDPARTY_PATH": "${sourceDir}/../../../Packages"
+            }
+        },
+        {
+            "name": "wanted-linux",
+            "displayName": "WANTED / Linux / Ninja Multi-Config",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build/linux",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "cacheVariables": {
+                "CMAKE_MODULE_PATH": "${sourceDir}/../../cmake",
+                "CMAKE_C_COMPILER": "clang",
+                "CMAKE_CXX_COMPILER": "clang++",
+                "LY_3RDPARTY_PATH": "${sourceDir}/../../../Packages"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "wanted-windows-profile",
+            "configurePreset": "wanted-windows",
+            "configuration": "profile",
+            "targets": [
+                "Editor",
+                "Wanted.GameLauncher"
+            ]
+        },
+        {
+            "name": "wanted-linux-profile",
+            "configurePreset": "wanted-linux",
+            "configuration": "profile",
+            "targets": [
+                "Editor",
+                "Wanted.GameLauncher"
+            ]
+        }
+    ]
+}

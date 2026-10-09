@@ -1,0 +1,47 @@
+{
+    "project_name": "Wanted",
+    "version": "0.1.0",
+    "project_id": "{F648982C-5C58-4B30-907A-7A35E1DA7AF7}",
+    "origin": "Wanted Engine contributors",
+    "license": "Apache-2.0 OR MIT",
+    "display_name": "WANTED",
+    "summary": "Original Western action-adventure prototype powered by Wanted Engine.",
+    "canonical_tags": [
+        "Project"
+    ],
+    "user_tags": [
+        "Wanted"
+    ],
+    "icon_path": "preview.png",
+    "engine": "o3de",
+    "external_subdirectories": [
+        "Gem",
+        "../../Gems/ScriptMotion"
+    ],
+    "gem_names": [
+        "Wanted",
+        "ScriptMotion",
+        "Atom",
+        "AudioSystem",
+        "CameraFramework",
+        "DebugDraw",
+        "DiffuseProbeGrid",
+        "EditorPythonBindings",
+        "EMotionFX",
+        "GameState",
+        "ImGui",
+        "LandscapeCanvas",
+        "LyShine",
+        "MiniAudio",
+        "PhysX5",
+        "PrimitiveAssets",
+        "PrefabBuilder",
+        "SaveData",
+        "ScriptCanvasPhysics",
+        "ScriptEvents",
+        "StartingPointInput",
+        "TextureAtlas",
+        "WhiteBox",
+        "RemoteTools"
+    ]
+}
