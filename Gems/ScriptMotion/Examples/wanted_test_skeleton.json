@@ -1,0 +1,13 @@
+{
+  "formatVersion": 1,
+  "name": "wanted_test_humanoid",
+  "bones": [
+    { "name": "root", "parent": null, "translation": [0, 0, 0], "rotation": [0, 0, 0, 1] },
+    { "name": "pelvis", "parent": "root", "translation": [0, 0, 0.95] },
+    { "name": "spine", "parent": "pelvis", "translation": [0, 0, 0.35] },
+    { "name": "head", "parent": "spine", "translation": [0, 0, 0.4] },
+    { "name": "upperarm_r", "parent": "spine", "translation": [0.2, 0, 0.25] },
+    { "name": "forearm_r", "parent": "upperarm_r", "translation": [0.28, 0, 0] },
+    { "name": "hand_r", "parent": "forearm_r", "translation": [0.25, 0, 0] }
+  ]
+}

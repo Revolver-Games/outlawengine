@@ -1,0 +1,50 @@
+{
+  "formatVersion": 1,
+  "name": "frontier_wave",
+  "skeleton": "wanted_test_humanoid",
+  "duration": 2.0,
+  "tracks": [
+    {
+      "bone": "spine",
+      "keys": [
+        { "time": 0.0, "rotation": [0, 0, 0, 1], "interpolation": "smoothstep" },
+        { "time": 1.0, "rotation": [0, 0, 0.0436193874, 0.9990482216], "interpolation": "smoothstep" },
+        { "time": 2.0, "rotation": [0, 0, 0, 1] }
+      ]
+    },
+    {
+      "bone": "upperarm_r",
+      "keys": [
+        { "time": 0.0, "rotation": [0, 0, 0, 1], "interpolation": "smoothstep" },
+        { "time": 0.5, "rotation": [0, -0.5, 0, 0.8660254038], "interpolation": "smoothstep" },
+        { "time": 1.5, "rotation": [0, -0.5, 0, 0.8660254038], "interpolation": "smoothstep" },
+        { "time": 2.0, "rotation": [0, 0, 0, 1] }
+      ]
+    },
+    {
+      "bone": "forearm_r",
+      "keys": [
+        { "time": 0.0, "rotation": [0, 0, 0, 1], "interpolation": "smoothstep" },
+        { "time": 0.5, "rotation": [0, -0.2588190451, 0, 0.9659258263], "interpolation": "smoothstep" },
+        { "time": 1.5, "rotation": [0, -0.2588190451, 0, 0.9659258263], "interpolation": "smoothstep" },
+        { "time": 2.0, "rotation": [0, 0, 0, 1] }
+      ]
+    },
+    {
+      "bone": "hand_r",
+      "keys": [
+        { "time": 0.0, "rotation": [0, 0, 0, 1], "interpolation": "smoothstep" },
+        { "time": 0.5, "rotation": [0, 0, -0.1736481777, 0.9848077530], "interpolation": "smoothstep" },
+        { "time": 0.75, "rotation": [0, 0, 0.1736481777, 0.9848077530], "interpolation": "smoothstep" },
+        { "time": 1.0, "rotation": [0, 0, -0.1736481777, 0.9848077530], "interpolation": "smoothstep" },
+        { "time": 1.25, "rotation": [0, 0, 0.1736481777, 0.9848077530], "interpolation": "smoothstep" },
+        { "time": 1.5, "rotation": [0, 0, -0.1736481777, 0.9848077530], "interpolation": "smoothstep" },
+        { "time": 2.0, "rotation": [0, 0, 0, 1] }
+      ]
+    }
+  ],
+  "events": [
+    { "time": 0.5, "name": "greeting_begin", "payload": { "speaker": "rider", "subtitle": "Afternoon, stranger." } },
+    { "time": 1.5, "name": "greeting_end", "payload": {} }
+  ]
+}

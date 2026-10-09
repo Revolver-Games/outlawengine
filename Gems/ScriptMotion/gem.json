@@ -1,0 +1,13 @@
+{
+    "gem_name": "ScriptMotion",
+    "version": "0.1.0",
+    "display_name": "Wanted ScriptMotion",
+    "license": "Apache-2.0 Or MIT",
+    "license_url": "https://github.com/o3de/o3de/blob/development/LICENSE.txt",
+    "origin": "Wanted Engine contributors",
+    "type": "Code",
+    "summary": "Validated text-authored skeletal motion, a portable pose evaluator, and an EMotionFX playback adapter.",
+    "canonical_tags": ["Gem"],
+    "user_tags": ["Animation", "Scripting", "Wanted"],
+    "dependencies": ["EMotionFX"]
+}
