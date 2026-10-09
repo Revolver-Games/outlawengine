@@ -1,0 +1,11 @@
+{
+  "gem_name": "CineScript",
+  "version": "0.1.0",
+  "display_name": "Outlaw CineScript",
+  "license": "Apache-2.0 OR MIT",
+  "origin": "Revolver Games contributors",
+  "type": "Code",
+  "summary": "Bounded text-authored cinematic runtime with actor, camera and ScriptMotion bindings.",
+  "canonical_tags": ["Gem"],
+  "dependencies": ["ScriptMotion", "Camera", "DebugDraw"]
+}

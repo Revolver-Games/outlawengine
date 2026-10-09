@@ -1,0 +1,30 @@
+{
+  "formatVersion": 1,
+  "id": "unclaimed_post",
+  "chapter": "mercy_crossing",
+  "revision": 1,
+  "flags": ["met_ada", "has_satchel", "satchel_returned", "postmark_clue", "asked_about_town"],
+  "relationships": ["ada_mercer"],
+  "mission": {
+    "reward": 5,
+    "completedFlag": "postmark_clue",
+    "cutscene": "mercy_delivery",
+    "objectives": [
+      {"id": "meet_ada", "text": "Speak to Ada Mercer at Mercy Crossing station.", "event": "dialogue", "target": "accept_delivery", "sets": "met_ada"},
+      {"id": "find_satchel", "text": "Recover the mail satchel beside the water tower.", "event": "collect", "target": "mail_satchel", "requires": "met_ada", "sets": "has_satchel"},
+      {"id": "return_satchel", "text": "Return the satchel to Ada Mercer.", "event": "dialogue", "target": "return_mail", "requires": "has_satchel", "sets": "satchel_returned"}
+    ]
+  },
+  "dialogue": [
+    {"id": "ada_intro", "speaker": "Ada Mercer", "text": "A satchel slipped from the delivery wagon. Would you look by the water tower?", "choices": [
+      {"id": "ask_town", "text": "Is Mercy Crossing always this quiet?", "next": "ada_town", "sets": "asked_about_town"},
+      {"id": "accept_delivery", "text": "I'll bring it back.", "relationship": "ada_mercer", "reputationDelta": 2}
+    ]},
+    {"id": "ada_town", "speaker": "Ada Mercer", "text": "Quiet streets have their share of stories. The post brings most of ours.", "choices": [
+      {"id": "back_to_delivery", "text": "About that satchel...", "next": "ada_intro"}
+    ]},
+    {"id": "ada_return", "speaker": "Ada Mercer", "text": "That looks like our missing mail.", "requires": "has_satchel", "choices": [
+      {"id": "return_mail", "text": "Everything is here.", "relationship": "ada_mercer", "reputationDelta": 3}
+    ]}
+  ]
+}

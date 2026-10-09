@@ -51,3 +51,13 @@ CineScript will own a validated sequence timeline and actor/camera/audio/subtitl
 WantedSim will separate authoritative injury state from optional blood/decal/stain rendering. Integrate rigid bodies, impulses, constraints, ragdoll drive targets and animation/physics blending with PhysX and EMotion FX, with fixed-step tests for stability before richer effects. There is currently no injury or active-ragdoll implementation.
 
 WANTED and WON will share gameplay state and simulation code. The server will own movement validation, damage resolution, injury outcomes, mission rewards and persistence; clients submit intents. Do not replicate client-computed outcomes as authority. This milestone has no server, replication, economy, anti-cheat or hosted service.
+
+## CineScript implementation update (2026-10-09)
+
+`Gems/CineScript/Code/Include/CineScript/Timeline.h` defines validated scene state and
+stateless frame outputs. Timeline.cpp interprets movement, camera, dialogue and
+ScriptMotion alias intervals; signal/audio/music cues are separate side effects.
+The O3DE component applies snapshots through existing buses and restores camera,
+transforms and animation speed on teardown. The core is compiled/tested; native
+code remains unverified. The earlier planned-extension paragraph describes the
+initial milestone, not this new implementation. See the CineScript README.

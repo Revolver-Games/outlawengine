@@ -6,6 +6,7 @@
 #include "ScriptMotionPlayback.h"
 #include <AzCore/RTTI/BehaviorContext.h>
 #include <AzCore/Serialization/SerializeContext.h>
+#include <cmath>
 
 namespace Wanted::ScriptMotion::O3DE
 {
@@ -37,6 +38,7 @@ namespace Wanted::ScriptMotion::O3DE
                 ->Event("Play", &ScriptMotionRequests::Play)
                 ->Event("Stop", &ScriptMotionRequests::Stop)
                 ->Event("SetPlaybackSpeed", &ScriptMotionRequests::SetPlaybackSpeed)
+                ->Event("GetPlaybackSpeed", &ScriptMotionRequests::GetPlaybackSpeed)
                 ->Event("Seek", &ScriptMotionRequests::Seek)
                 ->Event("GetDuration", &ScriptMotionRequests::GetDuration)
                 ->Event("GetLastError", &ScriptMotionRequests::GetLastError);
@@ -105,7 +107,13 @@ namespace Wanted::ScriptMotion::O3DE
 
     bool ScriptMotionComponent::SetPlaybackSpeed(float speed)
     {
-        if (!m_playback->SetPlaybackSpeed(speed))
+        // A cinematic restores configuration even when its Actor/motion was removed.
+        // Validate idle configuration without requiring a live motion instance.
+        if (!std::isfinite(speed) || speed < 0.0f || speed > 10.0f)
+        {
+            return false;
+        }
+        if (m_playback->GetDuration() > 0.0f && !m_playback->SetPlaybackSpeed(speed))
         {
             return false;
         }
