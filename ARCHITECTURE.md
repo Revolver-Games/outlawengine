@@ -1,3 +1,11 @@
+# Current runtime addition
+
+`ScriptMotion/Player.h` owns validated clips and layered playback state; the new
+`Player.cpp` is shared by standalone and Gem core targets. Transport, bounded
+events, crossfades and root translation are tested by `PlayerTests.cpp` and a
+768-frame authored sequence. EMotion FX remains a separate adapter; `PLAYER.md`
+documents this integration boundary and performance limits.
+
 # Wanted Engine architecture
 
 ## Source boundaries

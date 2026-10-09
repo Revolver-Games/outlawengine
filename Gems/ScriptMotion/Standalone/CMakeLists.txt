@@ -6,7 +6,7 @@ include(CTest)
 option(SCRIPTMOTION_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
 
 add_library(ScriptMotionCore STATIC ../Code/Source/Core/ScriptMotion.cpp ../Code/Source/Core/PoseSpace.cpp
-    ../Code/Source/Core/MotionBake.cpp)
+    ../Code/Source/Core/MotionBake.cpp ../Code/Source/Core/Player.cpp)
 target_include_directories(ScriptMotionCore PUBLIC ../Code/Include)
 target_compile_features(ScriptMotionCore PUBLIC cxx_std_20)
 set_target_properties(ScriptMotionCore PROPERTIES CXX_EXTENSIONS OFF)
@@ -29,7 +29,20 @@ endif()
 
 add_executable(scriptmotion_demo ScriptMotionDemo.cpp)
 target_link_libraries(scriptmotion_demo PRIVATE ScriptMotionCore)
+add_executable(scriptmotion_player PlayerDemo.cpp)
+target_link_libraries(scriptmotion_player PRIVATE ScriptMotionCore)
 if(BUILD_TESTING)
+    set(motion_assets ${CMAKE_CURRENT_SOURCE_DIR}/../../../Projects/Wanted/Assets/ScriptMotion)
+    foreach(clip IN ITEMS idle walk greeting)
+        add_test(NAME ScriptMotionBake_${clip} COMMAND scriptmotion_demo
+            ${motion_assets}/locomotion.skeleton.json ${motion_assets}/${clip}.scriptmotion.json 0.25 --bake)
+    endforeach()
+    add_test(NAME ScriptMotionPlaybackSequence COMMAND scriptmotion_player
+        ${motion_assets}/locomotion.skeleton.json ${motion_assets}/idle.scriptmotion.json
+        ${motion_assets}/walk.scriptmotion.json ${motion_assets}/greeting.scriptmotion.json)
+    add_executable(ScriptMotionPlayerTests ../Code/Tests/PlayerTests.cpp)
+    target_link_libraries(ScriptMotionPlayerTests PRIVATE ScriptMotionCore)
+    add_test(NAME ScriptMotionPlayerTests COMMAND ScriptMotionPlayerTests)
     add_executable(ScriptMotionTests ../Code/Tests/ScriptMotionTests.cpp)
     target_link_libraries(ScriptMotionTests PRIVATE ScriptMotionCore)
     add_test(NAME ScriptMotionCoreTests COMMAND ScriptMotionTests)

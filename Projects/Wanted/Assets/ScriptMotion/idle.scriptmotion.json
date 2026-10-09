@@ -1,0 +1,209 @@
+{
+  "formatVersion": 1,
+  "name": "courier_idle_breathing",
+  "skeleton": "courier_locomotion",
+  "duration": 4,
+  "tracks": [
+    {
+      "bone": "spine",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            0,
+            0.35,
+            0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 2,
+          "translation": [
+            0,
+            0.35,
+            0
+          ],
+          "rotation": [
+            0.013089595571344441,
+            0.0,
+            0.0,
+            0.999914327574007
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 4,
+          "translation": [
+            0,
+            0.35,
+            0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "interpolation": "smoothstep"
+        }
+      ]
+    },
+    {
+      "bone": "head",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            0,
+            0.4,
+            0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 2,
+          "translation": [
+            0,
+            0.4,
+            0
+          ],
+          "rotation": [
+            -0.008726535498373935,
+            -0.0,
+            -0.0,
+            0.9999619230641713
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 4,
+          "translation": [
+            0,
+            0.4,
+            0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "interpolation": "smoothstep"
+        }
+      ]
+    },
+    {
+      "bone": "upperarm_r",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            0.2,
+            0.25,
+            0
+          ],
+          "rotation": [
+            -0.0,
+            -0.0,
+            -0.6087614290087207,
+            0.7933533402912352
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 2,
+          "translation": [
+            0.2,
+            0.25,
+            0
+          ],
+          "rotation": [
+            -0.0,
+            -0.0,
+            -0.5948227867513413,
+            0.8038568606172173
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 4,
+          "translation": [
+            0.2,
+            0.25,
+            0
+          ],
+          "rotation": [
+            -0.0,
+            -0.0,
+            -0.6087614290087207,
+            0.7933533402912352
+          ],
+          "interpolation": "smoothstep"
+        }
+      ]
+    },
+    {
+      "bone": "upperarm_l",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            -0.2,
+            0.25,
+            0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.6087614290087207,
+            0.7933533402912352
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 2,
+          "translation": [
+            -0.2,
+            0.25,
+            0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.5948227867513413,
+            0.8038568606172173
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 4,
+          "translation": [
+            -0.2,
+            0.25,
+            0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.6087614290087207,
+            0.7933533402912352
+          ],
+          "interpolation": "smoothstep"
+        }
+      ]
+    }
+  ],
+  "events": []
+}

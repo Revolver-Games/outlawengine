@@ -1,0 +1,475 @@
+{
+  "formatVersion": 1,
+  "name": "courier_walk",
+  "skeleton": "courier_locomotion",
+  "duration": 1,
+  "tracks": [
+    {
+      "bone": "thigh_l",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            -0.12,
+            -0.05,
+            0
+          ],
+          "rotation": [
+            -0.21643961393810288,
+            -0.0,
+            -0.0,
+            0.9762960071199334
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.5,
+          "translation": [
+            -0.12,
+            -0.05,
+            0
+          ],
+          "rotation": [
+            0.21643961393810288,
+            0.0,
+            0.0,
+            0.9762960071199334
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1,
+          "translation": [
+            -0.12,
+            -0.05,
+            0
+          ],
+          "rotation": [
+            -0.21643961393810288,
+            -0.0,
+            -0.0,
+            0.9762960071199334
+          ],
+          "interpolation": "smoothstep"
+        }
+      ]
+    },
+    {
+      "bone": "thigh_r",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            0.12,
+            -0.05,
+            0
+          ],
+          "rotation": [
+            0.21643961393810288,
+            0.0,
+            0.0,
+            0.9762960071199334
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.5,
+          "translation": [
+            0.12,
+            -0.05,
+            0
+          ],
+          "rotation": [
+            -0.21643961393810288,
+            -0.0,
+            -0.0,
+            0.9762960071199334
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1,
+          "translation": [
+            0.12,
+            -0.05,
+            0
+          ],
+          "rotation": [
+            0.21643961393810288,
+            0.0,
+            0.0,
+            0.9762960071199334
+          ],
+          "interpolation": "smoothstep"
+        }
+      ]
+    },
+    {
+      "bone": "shin_l",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            0.043619387365336,
+            0.0,
+            0.0,
+            0.9990482215818578
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.25,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            0.3826834323650898,
+            0.0,
+            0.0,
+            0.9238795325112867
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.5,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            0.043619387365336,
+            0.0,
+            0.0,
+            0.9990482215818578
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            0.043619387365336,
+            0.0,
+            0.0,
+            0.9990482215818578
+          ],
+          "interpolation": "smoothstep"
+        }
+      ]
+    },
+    {
+      "bone": "shin_r",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            0.043619387365336,
+            0.0,
+            0.0,
+            0.9990482215818578
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.5,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            0.043619387365336,
+            0.0,
+            0.0,
+            0.9990482215818578
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.75,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            0.3826834323650898,
+            0.0,
+            0.0,
+            0.9238795325112867
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            0.043619387365336,
+            0.0,
+            0.0,
+            0.9990482215818578
+          ],
+          "interpolation": "smoothstep"
+        }
+      ]
+    },
+    {
+      "bone": "foot_l",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            -0.043619387365336,
+            -0.0,
+            -0.0,
+            0.9990482215818578
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.25,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            -0.21643961393810288,
+            -0.0,
+            -0.0,
+            0.9762960071199334
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.5,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            -0.043619387365336,
+            -0.0,
+            -0.0,
+            0.9990482215818578
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            -0.043619387365336,
+            -0.0,
+            -0.0,
+            0.9990482215818578
+          ],
+          "interpolation": "smoothstep"
+        }
+      ]
+    },
+    {
+      "bone": "foot_r",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            -0.043619387365336,
+            -0.0,
+            -0.0,
+            0.9990482215818578
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.5,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            -0.043619387365336,
+            -0.0,
+            -0.0,
+            0.9990482215818578
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 0.75,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            -0.21643961393810288,
+            -0.0,
+            -0.0,
+            0.9762960071199334
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1,
+          "translation": [
+            0,
+            -0.4,
+            0
+          ],
+          "rotation": [
+            -0.043619387365336,
+            -0.0,
+            -0.0,
+            0.9990482215818578
+          ],
+          "interpolation": "smoothstep"
+        }
+      ]
+    },
+    {
+      "bone": "upperarm_r",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            0.2,
+            0.25,
+            0
+          ],
+          "rotation": [
+            -0.0,
+            -0.0,
+            -0.6087614290087207,
+            0.7933533402912352
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1,
+          "translation": [
+            0.2,
+            0.25,
+            0
+          ],
+          "rotation": [
+            -0.0,
+            -0.0,
+            -0.6087614290087207,
+            0.7933533402912352
+          ],
+          "interpolation": "smoothstep"
+        }
+      ]
+    },
+    {
+      "bone": "upperarm_l",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            -0.2,
+            0.25,
+            0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.6087614290087207,
+            0.7933533402912352
+          ],
+          "interpolation": "smoothstep"
+        },
+        {
+          "time": 1,
+          "translation": [
+            -0.2,
+            0.25,
+            0
+          ],
+          "rotation": [
+            0.0,
+            0.0,
+            0.6087614290087207,
+            0.7933533402912352
+          ],
+          "interpolation": "smoothstep"
+        }
+      ]
+    },
+    {
+      "bone": "root",
+      "keys": [
+        {
+          "time": 0,
+          "translation": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "time": 1,
+          "translation": [
+            0,
+            0,
+            1.2
+          ]
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "time": 0.25,
+      "name": "footstep",
+      "payload": {
+        "foot": "left"
+      }
+    },
+    {
+      "time": 0.75,
+      "name": "footstep",
+      "payload": {
+        "foot": "right"
+      }
+    }
+  ]
+}

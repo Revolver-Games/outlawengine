@@ -67,7 +67,7 @@ class CourierAssetTests(unittest.TestCase):
             for weight, joint in zip(weights, joints):
                 self.assertTrue(all(math.isfinite(w) and w >= 0 for w in weight))
                 self.assertAlmostEqual(sum(weight), 1)
-                self.assertTrue(all(0 <= j < 7 for j in joint))
+                self.assertTrue(all(0 <= j < len(self.skeleton['bones']) for j in joint))
 
     def test_triangles_have_outward_normals_and_valid_buffer_ranges(self):
         for view in self.asset["bufferViews"]:

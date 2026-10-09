@@ -1,3 +1,11 @@
+# Current acceptance status
+
+Repository publication is established and PRs #1–#3 are merged. Portable playback
+now has three authored animations, layers, transitions and root translation.
+Engine compilation and visible O3DE playback are still open gates. The next
+portable milestone is CineScript integrated with FirstErrand. No later milestone
+is completed merely by this runtime addition.
+
 # Wanted Engine roadmap
 
 This is a scoped backlog, not a list of completed capabilities. Verify each acceptance criterion before marking it complete.
