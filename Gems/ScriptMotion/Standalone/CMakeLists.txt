@@ -5,7 +5,7 @@ project(ScriptMotionStandalone VERSION 0.1.0 LANGUAGES CXX)
 include(CTest)
 option(SCRIPTMOTION_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
 
-add_library(ScriptMotionCore STATIC ../Code/Source/Core/ScriptMotion.cpp)
+add_library(ScriptMotionCore STATIC ../Code/Source/Core/ScriptMotion.cpp ../Code/Source/Core/PoseSpace.cpp)
 target_include_directories(ScriptMotionCore PUBLIC ../Code/Include)
 target_compile_features(ScriptMotionCore PUBLIC cxx_std_20)
 set_target_properties(ScriptMotionCore PROPERTIES CXX_EXTENSIONS OFF)
