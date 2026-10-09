@@ -1,0 +1,13 @@
+$ ../tooling/bin/ctest --test-dir ../build-scriptmotion-release --output-on-failure
+Internal ctest changing into directory: <development-directory>/build-scriptmotion-release
+Test project <development-directory>/build-scriptmotion-release
+    Start 1: ScriptMotionCoreTests
+1/2 Test #1: ScriptMotionCoreTests ............   Passed    0.02 sec
+    Start 2: ScriptMotionExample
+2/2 Test #2: ScriptMotionExample ..............   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Total Test time (real) =   0.03 sec
+
+exit_code=0

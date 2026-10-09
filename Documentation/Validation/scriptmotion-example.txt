@@ -1,0 +1,12 @@
+$ ../build-scriptmotion-release/scriptmotion_demo Gems/ScriptMotion/Examples/wanted_test_skeleton.json Gems/ScriptMotion/Examples/frontier_wave.scriptmotion.json 1.0
+ScriptMotion frontier_wave: timeline=1.000000 sample=1.000000 bones=7
+root translation=[0.000000,0.000000,0.000000] rotation=[0.000000,0.000000,0.000000,1.000000]
+pelvis translation=[0.000000,0.000000,0.950000] rotation=[0.000000,0.000000,0.000000,1.000000]
+spine translation=[0.000000,0.000000,0.350000] rotation=[0.000000,0.000000,0.043619,0.999048]
+head translation=[0.000000,0.000000,0.400000] rotation=[0.000000,0.000000,0.000000,1.000000]
+upperarm_r translation=[0.200000,0.000000,0.250000] rotation=[0.000000,-0.500000,0.000000,0.866025]
+forearm_r translation=[0.280000,0.000000,0.000000] rotation=[0.000000,-0.258819,0.000000,0.965926]
+hand_r translation=[0.250000,0.000000,0.000000] rotation=[0.000000,0.000000,-0.173648,0.984808]
+event 0.500000 greeting_begin {"speaker":"rider","subtitle":"Afternoon, stranger."}
+
+exit_code=0

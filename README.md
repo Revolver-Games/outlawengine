@@ -1,3 +1,23 @@
+# Wanted Engine
+
+Wanted Engine is an O3DE source-based development project for **WANTED**, an original Western game, and its planned online mode **WantedOn (WON)**.
+
+This checkout retains the genuine O3DE source and history. The initial development base is `e0315902af47533267f273835b99d28b96c76e32` on upstream `development`. The local working branch is `wanted-development`. The engine association identifier remains `o3de` for compatibility; Wanted-specific code is isolated in Gems and the game project.
+
+The first milestone contains a C++20 ScriptMotion parser and pose evaluator, automated tests, example animations, an EMotion FX adapter, and a generated Wanted project with a tested mission state machine. **The portable code has been compiled and tested; the EMotion FX adapter, editor, and game have not been compiled or launched in this environment.** This is an initial implementation, not a finished game or a playable level.
+
+- [Build instructions](BUILD_INSTRUCTIONS.md)
+- [Progress and verification](PROGRESS.md)
+- [Architecture and source map](ARCHITECTURE.md)
+- [Roadmap](ROADMAP.md)
+- [Next session](NEXT_SESSION.md)
+- [ScriptMotion format and example](Gems/ScriptMotion/Examples/README.md)
+- [WANTED project](Projects/Wanted/README.md)
+
+O3DE's existing licensing, attribution, functionality, and original README follow. No proprietary Rockstar source or assets are included.
+
+---
+
 # O3DE (Open 3D Engine)
 
 O3DE (Open 3D Engine) is an open-source, real-time, multi-platform 3D engine that enables developers and content creators to build AAA games, cinema-quality 3D worlds, and high-fidelity simulations without any fees or commercial obligations.

@@ -1,0 +1,11 @@
+$ ../tooling/bin/ctest --test-dir Projects/Wanted/build/mission-tests --output-on-failure
+Internal ctest changing into directory: <repository>/Projects/Wanted/build/mission-tests
+Test project <repository>/Projects/Wanted/build/mission-tests
+    Start 1: Wanted.FirstErrand
+1/1 Test #1: Wanted.FirstErrand ...............   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.00 sec
+
+exit_code=0
