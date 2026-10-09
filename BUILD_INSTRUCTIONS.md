@@ -83,3 +83,21 @@ cmake --build --preset wanted-windows-profile --parallel 2
 The presets keep downloaded third-party packages in `WantedDevelopment/Packages` and build outputs inside the project. The full build must compile `ScriptMotion`, `ScriptMotion.Editor`, `Wanted`, `Editor`, and `Wanted.GameLauncher`. Read the first compiler error, correct the adapter against actual upstream APIs, then rebuild. Do not declare editor preview or game behavior verified until the executable runs with processed assets and a compatible Actor.
 
 See `Projects/Wanted/FIRST_SCENE.md` for the first real playable scene task. The shipped example skeleton is JSON data, not a skinned Actor asset. No automatic retargeting or proprietary character assets are included.
+
+## CineScript portable verification (2026-10-09)
+
+On an installed MSVC developer shell:
+
+```powershell
+cmake -S Gems/CineScript/Standalone -B build/cinescript -G "Ninja Multi-Config"
+cmake --build build/cinescript --config Debug --parallel 2
+ctest --test-dir build/cinescript -C Debug --output-on-failure
+cmake --build build/cinescript --config Release --parallel 2
+ctest --test-dir build/cinescript -C Release --output-on-failure
+```
+
+Both configurations actually passed 2/2 tests on Windows, including 97 assertions
+and the mission/cinematic/animation integration. The native Gem/Editor is still
+unverified. Full results and the unsuccessful sanitizer probe are in
+`Documentation/Validation/cinescript-runtime.md`. Earlier environment statements
+above are historical; updated complete build guidance is also in ScriptMotion PR #4.

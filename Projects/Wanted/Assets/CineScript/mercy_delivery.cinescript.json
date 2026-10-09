@@ -1,0 +1,39 @@
+{
+  "formatVersion": 1,
+  "id": "mercy_delivery",
+  "revision": 1,
+  "duration": 7,
+  "targets": [
+    {"id": "player", "kind": "actor"},
+    {"id": "ada_mercer", "kind": "actor"},
+    {"id": "wide", "kind": "camera"},
+    {"id": "ada_close", "kind": "camera"}
+  ],
+  "tracks": [
+    {"target": "player", "keys": [
+      {"time": 0, "translation": [0, -4, 0]},
+      {"time": 2, "translation": [0, -1.5, 0], "interpolation": "smoothstep"},
+      {"time": 7, "translation": [0, -1.5, 0]}
+    ]},
+    {"target": "ada_mercer", "keys": [
+      {"time": 0, "translation": [0, 0, 0], "rotation": [0, 0, 1, 0]}
+    ]},
+    {"target": "wide", "keys": [
+      {"time": 0, "translation": [4, -6, 2], "rotation": [0, 0, 0.2588190451, 0.9659258263]},
+      {"time": 3, "translation": [3.5, -5, 2], "rotation": [0, 0, 0.2588190451, 0.9659258263]}
+    ]},
+    {"target": "ada_close", "keys": [
+      {"time": 0, "translation": [0.5, -2, 1.65]}
+    ]}
+  ],
+  "events": [
+    {"time": 0, "type": "camera", "target": "wide"},
+    {"time": 0, "type": "music", "value": "mercy_evening"},
+    {"time": 2, "duration": 1.8, "type": "dialogue", "target": "player", "value": "Found your satchel by the water tower."},
+    {"time": 4, "type": "camera", "target": "ada_close"},
+    {"time": 4, "duration": 2, "type": "dialogue", "target": "ada_mercer", "value": "Much obliged. Mercy Crossing still has decent folk."},
+    {"time": 4, "duration": 2, "type": "animation", "target": "ada_mercer", "value": "courier_wave"},
+    {"time": 4, "type": "audio", "value": "ada_thanks_voice"},
+    {"time": 6, "type": "signal", "value": "delivery_acknowledged", "if": "satchel_returned"}
+  ]
+}

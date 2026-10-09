@@ -1,0 +1,36 @@
+UpdateCTestConfiguration  from :<workspace>/work/build-cinescript/DartConfiguration.tcl
+Parse Config file:<workspace>/work/build-cinescript/DartConfiguration.tcl
+Test project <workspace>/work/build-cinescript
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: CineScript.Timeline
+
+1: Test command: <workspace>\work\build-cinescript\Debug\CineScriptTests.exe
+1: Working Directory: <workspace>/work/build-cinescript
+1: Test timeout computed to be: 1500
+1: 97 CineScript assertions passed
+1/2 Test #1: CineScript.Timeline ..............   Passed    0.05 sec
+test 2
+    Start 2: CineScript.MercyCrossing
+
+2: Test command: <workspace>\work\build-cinescript\Debug\cinescript_demo.exe "<workspace>/work/outlawengine/Gems/CineScript/Standalone/../../../Projects/Wanted/Assets/CineScript/mercy_delivery.cinescript.json" "<workspace>/work/outlawengine/Gems/CineScript/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/courier.skeleton.json" "<workspace>/work/outlawengine/Gems/CineScript/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/courier_wave.scriptmotion.json"
+2: Working Directory: <workspace>/work/build-cinescript
+2: Test timeout computed to be: 1500
+2: camera wide
+2: cue mercy_evening
+2: player: Found your satchel by the water tower.
+2: camera ada_close
+2: ada_mercer: Much obliged. Mercy Crossing still has decent folk.
+2: cue ada_thanks_voice
+2: cue delivery_acknowledged
+2: Mission completed once; 2 camera cuts; 2 dialogue lines; 128 evaluated animation frames; one completion; player control released.
+2/2 Test #2: CineScript.MercyCrossing .........   Passed    0.09 sec
+
+100% tests passed out of 2
+
+Total Test time (real) =   0.14 sec

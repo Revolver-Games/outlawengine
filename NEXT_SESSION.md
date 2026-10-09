@@ -41,3 +41,15 @@ Native adapter: source JSON development loading, bounded motion baking, native m
 Mission: fixed state machine with trusted local EBus/Lua adapter, not general MissionScript or StoryScript. No persistent save, rewards/economy, or multiplayer authority implementation.
 
 CineScript, injury/active-ragdoll simulation, gore/effects, open-world systems and WON networking remain future work. Do not report them as implemented because their names appear in this repository.
+
+## CineScript continuation (latest 2026-10-09)
+
+Fetch current development and inspect open PRs before changing code. This slice
+uses `feature/cinescript`, independently based on merged PR #3; ScriptMotion
+Player/locomotion work is in separate draft PR #4. Keep both branches intact.
+Read `Gems/CineScript/README.md` and `Documentation/Validation/cinescript-runtime.md`.
+Reproduce portable tests, then provision adequate engine resources and execute
+the native acceptance procedure. Review seven unrun native ScriptMotion cases.
+Do not mistake debug subtitles/cue aliases or the headless mission test for a
+completed playable level. Next portable work: general authored objectives/story
+state with persistence, while keeping the original FirstErrand adapter working.

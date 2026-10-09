@@ -16,11 +16,13 @@
     "engine": "o3de",
     "external_subdirectories": [
         "Gem",
-        "../../Gems/ScriptMotion"
+        "../../Gems/ScriptMotion",
+        "../../Gems/CineScript"
     ],
     "gem_names": [
         "Wanted",
         "ScriptMotion",
+        "CineScript",
         "Atom",
         "AudioSystem",
         "CameraFramework",
