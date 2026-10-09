@@ -27,3 +27,11 @@ FirstErrand headless integration are implemented and compiled. The P1 CineScript
 row remains open until the native camera, subtitles, game control and visible
 Actor acceptance passes. Audio/music listeners, lighting changes, camera dissolve
 and an editor timeline are still pending. General mission/story authoring follows.
+## Narrative acceptance update
+
+The first authored MissionScript/StoryScript core and combined cinematic test
+are implemented. Their broad milestone remains open: only one active definition,
+local save-owned rewards and host-supplied events are supported. Real trigger and
+inventory adapters, production dialogue/objective UI, chapter transitions, multiple
+missions, native acceptance and networking authority still need implementation.
+WantedSim, WON and Outlaw Director are not implemented by this slice.
