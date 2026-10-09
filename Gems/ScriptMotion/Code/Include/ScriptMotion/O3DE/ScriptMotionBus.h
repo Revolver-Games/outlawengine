@@ -15,7 +15,9 @@ namespace Wanted::ScriptMotion::O3DE
         // Commands run on the main thread, as do O3DE's built-in simple-motion controls.
         virtual bool Play() = 0;
         virtual void Stop() = 0;
+        // Also updates idle configuration so temporary transport owners can restore it.
         virtual bool SetPlaybackSpeed(float speed) = 0;
+        virtual float GetPlaybackSpeed() const = 0;
         virtual bool Seek(float timeSeconds) = 0;
         virtual float GetDuration() const = 0;
         virtual AZStd::string GetLastError() const = 0;

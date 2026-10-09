@@ -20,6 +20,13 @@ This is a scoped backlog, not a list of completed capabilities. Verify each acce
 
 No issue backlog was published while GitHub fork creation remained blocked. These rows are ready to become issues after fork access is available. Do not enable public game servers as part of that step.
 
+## CineScript acceptance update
+
+Portable timeline, original two-actor scene, skip/checkpoints and ScriptMotion/
+FirstErrand headless integration are implemented and compiled. The P1 CineScript
+row remains open until the native camera, subtitles, game control and visible
+Actor acceptance passes. Audio/music listeners, lighting changes, camera dissolve
+and an editor timeline are still pending. General mission/story authoring follows.
 ## Narrative acceptance update
 
 The first authored MissionScript/StoryScript core and combined cinematic test

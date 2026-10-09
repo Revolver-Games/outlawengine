@@ -42,19 +42,14 @@ Mission: fixed state machine with trusted local EBus/Lua adapter, not general Mi
 
 CineScript, injury/active-ragdoll simulation, gore/effects, open-world systems and WON networking remain future work. Do not report them as implemented because their names appear in this repository.
 
-## Latest narrative continuation (2026-10-09)
+## CineScript continuation (latest 2026-10-09)
 
-Inspect development and all draft PRs first: ScriptMotion runtime (#4), CineScript
-(#5), and `feature/missionscript`. All were started independently from merged
-PR #3; preserve the branches and obtain native validation/independent review before
-merging. Resolve any overlapping documentation edits without discarding reports.
-
-Read `Projects/Wanted/NARRATIVE.md` and `Documentation/Validation/narrative-runtime.md`.
-Standalone Debug/Release pass 2/2; combined with the exact CineScript snapshot both
-pass 5/5. Use WANTED_CINESCRIPT_SOURCE for the optional combined check. Do not treat
-headless animation poses/control flags as visible gameplay. Provision engine
-storage/RAM/dependencies, then verify native buses, camera restoration, Actor
-playback, the optional narrative-cinematic bridge and save/UI refresh. Implement
-the Mercy Crossing third-person/input/inventory/trigger/UI path next. Follow with
-WantedSim physics/injury and private server/two-client WON, then Director. Those
-later systems remain pending; no public services or workflows were changed.
+Fetch current development and inspect open PRs before changing code. This slice
+uses `feature/cinescript`, independently based on merged PR #3; ScriptMotion
+Player/locomotion work is in separate draft PR #4. Keep both branches intact.
+Read `Gems/CineScript/README.md` and `Documentation/Validation/cinescript-runtime.md`.
+Reproduce portable tests, then provision adequate engine resources and execute
+the native acceptance procedure. Review seven unrun native ScriptMotion cases.
+Do not mistake debug subtitles/cue aliases or the headless mission test for a
+completed playable level. Next portable work: general authored objectives/story
+state with persistence, while keeping the original FirstErrand adapter working.

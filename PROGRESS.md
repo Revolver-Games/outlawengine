@@ -58,11 +58,11 @@ Complete CineScript, MissionScript and StoryScript authored runtimes; playable l
 
 The first milestone delivers real portable C++ functionality and a genuine starting O3DE game project. It does not complete the engine/game request. Next gates are publication review, Windows/full-toolchain access, real Gem compilation, and a visible Actor/mission demo. See `NEXT_SESSION.md` and `ROADMAP.md`.
 
-## MissionScript / StoryScript slice (2026-10-09)
+## CineScript slice (2026-10-09)
 
-Added a compiled authored-objective/dialogue session with flags, decisions,
-reputation, local rewards and atomic checkpoint replay, plus native control source.
-Original FirstErrand regression remains passing. Debug/Release each pass 2/2 CTest;
-the combined mission/story/CineScript/ScriptMotion check passes 5/5 in each.
-Native bus/Lua, UI, trigger/inventory validation and the playable level remain
-unverified or pending. Read `Documentation/Validation/narrative-runtime.md`.
+New Gem interpreter and O3DE adapter source, original Mercy Crossing delivery
+scene and completion bridge. Debug/Release each compile and pass 2/2 CTest: 97
+assertions and a 448-update integration with two camera cuts, two dialogue lines,
+128 evaluated wave poses and one completion. Headless only. Native/editor/Lua
+execution and audio are not verified. ASan unavailable (missing x64 runtime library).
+See `Documentation/Validation/cinescript-runtime.md`. No merge performed.

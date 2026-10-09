@@ -44,13 +44,12 @@ WantedSim will separate authoritative injury state from optional blood/decal/sta
 
 WANTED and WON will share gameplay state and simulation code. The server will own movement validation, damage resolution, injury outcomes, mission rewards and persistence; clients submit intents. Do not replicate client-computed outcomes as authority. This milestone has no server, replication, economy, anti-cheat or hosted service.
 
-## Authored narrative implementation update
+## CineScript implementation update (2026-10-09)
 
-The WANTED Gem owns `Narrative::Session`, combining MissionScriptState and
-StoryScriptState with bounded accepted-command persistence. Mission transitions
-consume trusted host events; dialogue objectives only consume actual choices.
-Restoration replays into a temporary session and atomically replaces state, with
-no external side effects. A completion returns a cinematic alias and local reward
-delta; the saved balance owns that reward. This core is compiled and tested.
-The existing FirstErrand API remains independent; native adapters await verification.
-See `Projects/Wanted/NARRATIVE.md` for the complete contract and limits.
+`Gems/CineScript/Code/Include/CineScript/Timeline.h` defines validated scene state and
+stateless frame outputs. Timeline.cpp interprets movement, camera, dialogue and
+ScriptMotion alias intervals; signal/audio/music cues are separate side effects.
+The O3DE component applies snapshots through existing buses and restores camera,
+transforms and animation speed on teardown. The core is compiled/tested; native
+code remains unverified. The earlier planned-extension paragraph describes the
+initial milestone, not this new implementation. See the CineScript README.

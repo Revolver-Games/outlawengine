@@ -19,6 +19,7 @@
 #include <EMotionFX/Source/Skeleton.h>
 #include <EMotionFX/Source/TransformData.h>
 #include <O3DE/ScriptMotionPlayback.h>
+#include <ScriptMotion/O3DE/ScriptMotionComponent.h>
 
 namespace Wanted::ScriptMotion::O3DE
 {
@@ -162,6 +163,18 @@ namespace Wanted::ScriptMotion::O3DE
         EXPECT_FALSE(m_playback->Play(m_configuration));
         m_playback->SetActor(m_instance);
         EXPECT_TRUE(m_playback->Play(m_configuration));
+    }
+
+    TEST_F(ScriptMotionPlaybackTests, IdleComponentSpeedCanBeRestoredWithoutAMotion)
+    {
+        ScriptMotionComponent component;
+        EXPECT_TRUE(component.SetPlaybackSpeed(0));
+        EXPECT_FLOAT_EQ(component.GetPlaybackSpeed(), 0);
+        EXPECT_TRUE(component.SetPlaybackSpeed(1.5f));
+        EXPECT_FLOAT_EQ(component.GetPlaybackSpeed(), 1.5f);
+        EXPECT_FALSE(component.SetPlaybackSpeed(-1));
+        EXPECT_FALSE(component.SetPlaybackSpeed(11));
+        EXPECT_FLOAT_EQ(component.GetPlaybackSpeed(), 1.5f);
     }
 
     TEST_F(ScriptMotionPlaybackTests, ExternallyRemovedMotionIsNeverDereferenced)

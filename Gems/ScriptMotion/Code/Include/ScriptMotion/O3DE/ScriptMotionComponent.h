@@ -35,6 +35,7 @@ namespace Wanted::ScriptMotion::O3DE
         bool Play() override;
         void Stop() override;
         bool SetPlaybackSpeed(float speed) override;
+        float GetPlaybackSpeed() const override { return m_configuration.m_playbackSpeed; }
         bool Seek(float timeSeconds) override;
         float GetDuration() const override;
         AZStd::string GetLastError() const override;

@@ -156,6 +156,11 @@ This project exists thanks to all the people who contribute. [[Contribute](CONTR
 
 For terms please see the LICENSE*.TXT files at the root of this distribution.
 
+## Outlaw CineScript runtime slice
+
+The new [CineScript Gem](Gems/CineScript/README.md) has a compiled portable cinematic
+interpreter and headless FirstErrand/ScriptMotion integration test. O3DE camera and
+editor integration remains uncompiled. See [verification](Documentation/Validation/cinescript-runtime.md).
 ## Authored mission and story slice
 
 [MissionScript/StoryScript in WANTED](Projects/Wanted/NARRATIVE.md) now has a compiled

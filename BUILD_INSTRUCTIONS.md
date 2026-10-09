@@ -84,12 +84,20 @@ The presets keep downloaded third-party packages in `WantedDevelopment/Packages`
 
 See `Projects/Wanted/FIRST_SCENE.md` for the first real playable scene task. The shipped example skeleton is JSON data, not a skinned Actor asset. No automatic retargeting or proprietary character assets are included.
 
-## Authored narrative and combined tests (2026-10-09)
+## CineScript portable verification (2026-10-09)
 
-`Projects/Wanted/Tests` now builds FirstErrand and the narrative library/tests.
-Windows MSVC Debug and Release each pass 2/2 CTest. For combined testing, configure
-a separate build with `-DWANTED_CINESCRIPT_SOURCE=<checkout>/Gems/CineScript` after
-obtaining the CineScript slice; Debug and Release each passed 5/5 in this session.
-See `Documentation/Validation/narrative-runtime.md` for exact commands, source
-snapshot provenance, logs and native verification limits. These results do not
-represent a successful O3DE engine or Editor build.
+On an installed MSVC developer shell:
+
+```powershell
+cmake -S Gems/CineScript/Standalone -B build/cinescript -G "Ninja Multi-Config"
+cmake --build build/cinescript --config Debug --parallel 2
+ctest --test-dir build/cinescript -C Debug --output-on-failure
+cmake --build build/cinescript --config Release --parallel 2
+ctest --test-dir build/cinescript -C Release --output-on-failure
+```
+
+Both configurations actually passed 2/2 tests on Windows, including 97 assertions
+and the mission/cinematic/animation integration. The native Gem/Editor is still
+unverified. Full results and the unsuccessful sanitizer probe are in
+`Documentation/Validation/cinescript-runtime.md`. Earlier environment statements
+above are historical; updated complete build guidance is also in ScriptMotion PR #4.
