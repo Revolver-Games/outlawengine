@@ -1,0 +1,390 @@
+# Add as a NEW file: .github/workflows/outlaw-windows-manual.yml
+# Based on BUILD_INSTRUCTIONS.md and Projects/Wanted/CMakePresets.json,
+# inspected at 8378fc2a3a351595479215925830d84bafbaa0a1 (2026-10-09).
+# Requires a provisioned Windows runner; see outlaw-windows-setup.md.
+name: Outlaw Engine - manual Windows build
+run-name: Outlaw Windows profile - ${{ github.ref_name }} - run ${{ github.run_number }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      parallel_jobs:
+        description: Concurrent build jobs (allow at least 2 GB RAM per job)
+        type: choice
+        options: ['2', '4', '8']
+        default: '2'
+      create_draft_release:
+        description: Also create a NEW draft prerelease after a successful build
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    # Provision these labels first. Do not assume a standard hosted runner
+    # has enough disk or memory for a complete O3DE source build.
+    runs-on: [self-hosted, Windows, X64, outlaw-o3de]
+    timeout-minutes: 720
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      BUILD_JOBS: ${{ inputs.parallel_jobs }}
+      WANT_RELEASE: ${{ inputs.create_draft_release }}
+      # Process-local Git setting; does not edit the runner's global config.
+      GIT_CONFIG_COUNT: '1'
+      GIT_CONFIG_KEY_0: core.longpaths
+      GIT_CONFIG_VALUE_0: 'true'
+    outputs:
+      source_sha: ${{ steps.source.outputs.sha }}
+      artifact_name: ${{ steps.package.outputs.artifact_name }}
+      package_bytes: ${{ steps.package.outputs.package_bytes }}
+
+    steps:
+      - name: Check runner and create a new run directory
+        id: prepare
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (-not $IsWindows -or $PSVersionTable.PSVersion -lt [version]'7.3') {
+            throw 'This workflow requires Windows x64 and PowerShell 7.3 or later.'
+          }
+          if ($env:BUILD_JOBS -notin @('2', '4', '8')) { throw 'Invalid parallel_jobs.' }
+          foreach ($tool in @('git', 'cmake', 'ctest', '7z')) {
+            Get-Command $tool -ErrorAction Stop | Out-Null
+          }
+          if ($env:WANT_RELEASE -eq 'true') { Get-Command gh -ErrorAction Stop | Out-Null }
+          git lfs version
+          if ($LASTEXITCODE -ne 0) { throw 'Install Git LFS for the runner account.' }
+          $cmakeInfo = cmake --version
+          if ($LASTEXITCODE -ne 0) { throw 'CMake could not start.' }
+          $cmakeVersion = [regex]::Match(($cmakeInfo -join "`n"), '\d+\.\d+\.\d+').Value
+          if (-not $cmakeVersion -or [version]$cmakeVersion -lt [version]'3.30.0') {
+            throw 'Install CMake 3.30 or later; this project uses the VS 2022 preset.'
+          }
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+          if (-not (Test-Path -LiteralPath $vswhere)) { throw 'Visual Studio Installer/vswhere is missing.' }
+          $vs = & $vswhere -latest -version '[17.0,18.0)' -products * `
+            -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if ($LASTEXITCODE -ne 0 -or -not $vs) { throw 'Install Visual Studio 2022 with MSVC x64/x86 tools.' }
+          $sdkRoot = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows Kits\Installed Roots').KitsRoot10
+          $sdk = @(Get-ChildItem -LiteralPath (Join-Path $sdkRoot 'Include') -Directory |
+            Where-Object { $_.Name -match '^10\.0\.\d+\.0$' -and
+              [version]$_.Name -ge [version]'10.0.19041.0' -and
+              (Test-Path -LiteralPath (Join-Path $_.FullName 'um\Windows.h')) })
+          if ($sdk.Count -eq 0) { throw 'Install Windows SDK 10.0.19041.0 or later.' }
+          $ramGB = (Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB
+          if ($ramGB -lt [Math]::Max(16, (8 + 2 * [int]$env:BUILD_JOBS))) {
+            throw 'Insufficient RAM for the selected parallel_jobs; lower it or use a larger runner.'
+          }
+          $drive = [IO.DriveInfo]::new([IO.Path]::GetPathRoot($env:GITHUB_WORKSPACE))
+          if ($drive.AvailableFreeSpace -lt 150GB) {
+            throw 'At least 150 GiB free workspace space is required for source, packages, build and archives.'
+          }
+          $profileDrive = [IO.DriveInfo]::new([IO.Path]::GetPathRoot($env:USERPROFILE))
+          if ($profileDrive.AvailableFreeSpace -lt 10GB) { throw 'Allow at least 10 GiB free for the O3DE Python cache.' }
+          $runRoot = Join-Path $env:GITHUB_WORKSPACE "o3de-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"
+          if (Test-Path -LiteralPath $runRoot) { throw "Refusing to reuse existing directory: $runRoot" }
+          New-Item -ItemType Directory -Path $runRoot | Out-Null
+          foreach ($folder in @('logs', 'packages', 'dist')) {
+            New-Item -ItemType Directory -Path (Join-Path $runRoot $folder) | Out-Null
+          }
+          "RUN_ROOT=$runRoot" >> $env:GITHUB_ENV
+          "SOURCE_ROOT=$(Join-Path $runRoot 'src')" >> $env:GITHUB_ENV
+          "LY_3RDPARTY_PATH=$(Join-Path $runRoot 'packages')" >> $env:GITHUB_ENV
+          "ready=true" >> $env:GITHUB_OUTPUT
+          "CMake $cmakeVersion; VS 2022: $vs; RAM: $([Math]::Round($ramGB)) GiB" |
+            Set-Content -LiteralPath (Join-Path $runRoot 'logs\runner.txt') -Encoding utf8
+
+      - name: Check out the exact manually selected revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        env:
+          GIT_LFS_SKIP_SMUDGE: '1'
+        with:
+          ref: ${{ github.sha }}
+          path: o3de-${{ github.run_id }}-${{ github.run_attempt }}/src
+          fetch-depth: 1
+          lfs: false
+          submodules: false
+          clean: false
+          persist-credentials: false
+          set-safe-directory: false
+
+      - name: Verify source layout and hydrate Git LFS
+        id: source
+        working-directory: ${{ env.SOURCE_ROOT }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PSNativeCommandUseErrorActionPreference = $false
+          $sha = (git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $sha -cne $env:GITHUB_SHA) { throw 'Source commit mismatch.' }
+          foreach ($path in @('BUILD_INSTRUCTIONS.md', 'engine.json', 'python/get_python.bat',
+            'Projects/Wanted/CMakePresets.json', 'Projects/Wanted/project.json')) {
+            if (-not (Test-Path -LiteralPath $path)) { throw "Required repository file missing: $path" }
+          }
+          $project = Get-Content -Raw -LiteralPath 'Projects/Wanted/project.json' | ConvertFrom-Json
+          if ($project.project_name -cne 'Wanted') { throw 'The project name changed; review this workflow.' }
+          git lfs install --local
+          if ($LASTEXITCODE -ne 0) { throw 'Git LFS setup failed.' }
+          # Honor the repository's .lfsconfig; do not invent a fork endpoint or PAT.
+          git lfs pull --include= --exclude= 2>&1 | Tee-Object -FilePath "$env:RUN_ROOT/logs/lfs.log"
+          if ($LASTEXITCODE -ne 0) { throw 'LFS download failed. Check the repository LFS endpoint and access.' }
+          git lfs fsck
+          if ($LASTEXITCODE -ne 0) { throw 'LFS integrity check failed.' }
+          $lfsFiles = @(git lfs ls-files)
+          if ($LASTEXITCODE -ne 0) { throw 'Could not inspect LFS files.' }
+          if ($lfsFiles | Where-Object { $_ -match '^[0-9a-f]+\s+-\s' }) { throw 'Unhydrated LFS pointers remain.' }
+          "sha=$sha" >> $env:GITHUB_OUTPUT
+
+      - name: Bootstrap the repository's O3DE Python
+        working-directory: ${{ env.SOURCE_ROOT }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PSNativeCommandUseErrorActionPreference = $false
+          # Standard O3DE behavior: also writes to the runner account's
+          # USERPROFILE/.o3de/Python. No HOME/USERPROFILE redirection.
+          & ./python/get_python.bat 2>&1 | Tee-Object -FilePath "$env:RUN_ROOT/logs/python.log"
+          if ($LASTEXITCODE -ne 0) { throw 'O3DE Python bootstrap failed.' }
+
+      - name: Build and run the documented portable tests
+        working-directory: ${{ env.SOURCE_ROOT }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PSNativeCommandUseErrorActionPreference = $false
+          $suites = @{
+            scriptmotion = 'Gems/ScriptMotion/Standalone'
+            mission = 'Projects/Wanted/Tests'
+          }
+          foreach ($name in @('scriptmotion', 'mission')) {
+            $testBuild = Join-Path $env:RUN_ROOT "tests-$name"
+            cmake -S $suites[$name] -B $testBuild -G 'Visual Studio 17 2022' -A x64 `
+              2>&1 | Tee-Object -FilePath "$env:RUN_ROOT/logs/$name-configure.log"
+            if ($LASTEXITCODE -ne 0) { throw "$name test configuration failed." }
+            cmake --build $testBuild --config Debug --parallel $env:BUILD_JOBS `
+              2>&1 | Tee-Object -FilePath "$env:RUN_ROOT/logs/$name-build.log"
+            if ($LASTEXITCODE -ne 0) { throw "$name test build failed." }
+            ctest --test-dir $testBuild -C Debug --output-on-failure --no-tests=error `
+              2>&1 | Tee-Object -FilePath "$env:RUN_ROOT/logs/$name-test.log"
+            if ($LASTEXITCODE -ne 0) { throw "$name tests failed." }
+          }
+
+      - name: Configure with the existing Wanted Windows preset
+        working-directory: ${{ env.SOURCE_ROOT }}/Projects/Wanted
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PSNativeCommandUseErrorActionPreference = $false
+          # Keep the preset's engine lookup, generator and output directory.
+          # Override only its shared ../Packages location with this run's cache.
+          cmake --preset wanted-windows "-DLY_3RDPARTY_PATH=$env:LY_3RDPARTY_PATH" `
+            2>&1 | Tee-Object -FilePath "$env:RUN_ROOT/logs/configure.log"
+          if ($LASTEXITCODE -ne 0) { throw 'Wanted/O3DE configuration failed.' }
+
+      - name: Build the editor, project, ScriptMotion and asset tools
+        working-directory: ${{ env.SOURCE_ROOT }}/Projects/Wanted
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PSNativeCommandUseErrorActionPreference = $false
+          # These targets exist in the inspected repository. The preset's
+          # profile configuration is intentional: release is not an editor build.
+          cmake --build --preset wanted-windows-profile --parallel $env:BUILD_JOBS `
+            --target Editor Wanted.GameLauncher Wanted ScriptMotion ScriptMotion.Editor AssetProcessor AssetProcessorBatch `
+            2>&1 | Tee-Object -FilePath "$env:RUN_ROOT/logs/build.log"
+          if ($LASTEXITCODE -ne 0) { throw 'Full engine/project build failed; see the first compiler error.' }
+
+      - name: Verify outputs and package the complete binary directory
+        id: package
+        working-directory: ${{ env.SOURCE_ROOT }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PSNativeCommandUseErrorActionPreference = $false
+          $relativeBin = 'Projects/Wanted/build/windows/bin/profile'
+          foreach ($name in @('Editor.exe', 'Wanted.GameLauncher.exe', 'AssetProcessor.exe', 'AssetProcessorBatch.exe')) {
+            $file = Join-Path $relativeBin $name
+            if (-not (Test-Path -LiteralPath $file) -or (Get-Item -LiteralPath $file).Length -eq 0) {
+              throw "Required build output missing or empty: $file"
+            }
+          }
+          $binBytes = (Get-ChildItem -LiteralPath $relativeBin -Recurse -File | Measure-Object Length -Sum).Sum
+          $drive = [IO.DriveInfo]::new([IO.Path]::GetPathRoot($env:RUN_ROOT))
+          if ($drive.AvailableFreeSpace -lt ($binBytes + 5GB)) { throw 'Insufficient free space to package this build.' }
+          $base = "OutlawEngine-Windows-profile-$($env:GITHUB_SHA.Substring(0,12))-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"
+          $dist = Join-Path $env:RUN_ROOT 'dist'
+          $archive = Join-Path $dist "$base.7z"
+          # Preserve all DLLs, plugins, subdirectories, settings, symbols and
+          # copied runtime dependencies. Split below GitHub's 2 GiB/asset limit.
+          7z a -t7z -mx=1 -v1900m $archive $relativeBin 'LICENSE*' 'BUILD_INSTRUCTIONS.md'
+          if ($LASTEXITCODE -ne 0) { throw 'Archive creation failed.' }
+          $firstVolume = "$archive.001"
+          if (-not (Test-Path -LiteralPath $firstVolume)) { throw 'Expected archive volume was not created.' }
+          7z t $firstVolume
+          if ($LASTEXITCODE -ne 0) { throw 'Archive integrity test failed.' }
+          $manifest = [ordered]@{
+            repository = $env:GITHUB_REPOSITORY
+            commit = $env:GITHUB_SHA
+            ref = $env:GITHUB_REF
+            run_url = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
+            run_attempt = $env:GITHUB_RUN_ATTEMPT
+            built_utc = [DateTime]::UtcNow.ToString('o')
+            project = 'Projects/Wanted'
+            configure_preset = 'wanted-windows'
+            build_preset = 'wanted-windows-profile'
+            configuration = 'profile'
+            binary_directory = $relativeBin
+            targets = @('Editor', 'Wanted.GameLauncher', 'Wanted', 'ScriptMotion', 'ScriptMotion.Editor', 'AssetProcessor', 'AssetProcessorBatch')
+            portable_tests = 'passed'
+            assets_processed = $false
+            editor_runtime_tested = $false
+            standalone_installer = $false
+          }
+          $manifest | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath "$dist/build-info.json" -Encoding utf8NoBOM
+          @"
+          Outlaw Engine / Wanted - Windows profile developer build
+          Source: $env:GITHUB_REPOSITORY at $env:GITHUB_SHA
+
+          Keep every .7z.001, .7z.002, etc. volume in the same directory.
+          Use 7-Zip to test and extract the .7z.001 file. SHA256SUMS.txt covers
+          the archive volumes, this file and build-info.json.
+
+          These are source-build outputs, not an installed/relocatable SDK or
+          a packaged playable game. The entire bin/profile directory is included.
+          Engine/project sources, downloaded third-party packages and processed
+          asset caches are not bundled. Root license files are in the archive;
+          dependency licenses remain applicable.
+
+          To evaluate the build, obtain a separate clean checkout of the exact
+          source commit above, hydrate its LFS files and complete the prerequisites
+          in BUILD_INSTRUCTIONS.md. Extract into that checkout without overwriting
+          an existing build. This restores Projects/Wanted/build/windows/bin/profile.
+          Initialize the checkout's O3DE Python. Use --project-path with the absolute
+          Projects/Wanted path when launching AssetProcessor and Editor.
+
+          Process the project's assets before evaluating the game launcher.
+          Generated settings can contain CI-machine paths, and relocation has
+          not been verified; a local configure/rebuild may be necessary. Consult
+          the setup notes shipped with the workflow for the launch commands.
+          The workflow checks compilation, portable tests and archive integrity.
+          It does not verify editor startup, rendering or a playable level.
+          "@ | Set-Content -LiteralPath "$dist/README-BUILD.txt" -Encoding utf8NoBOM
+          $files = @(Get-ChildItem -LiteralPath $dist -File | Sort-Object Name)
+          $files | ForEach-Object {
+            "$((Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant())  $($_.Name)"
+          } | Set-Content -LiteralPath "$dist/SHA256SUMS.txt" -Encoding utf8NoBOM
+          "artifact_name=$base" >> $env:GITHUB_OUTPUT
+          $bytes = (Get-ChildItem -LiteralPath $dist -File | Measure-Object Length -Sum).Sum
+          "package_bytes=$bytes" >> $env:GITHUB_OUTPUT
+
+      - name: Publish downloadable build artifacts
+        id: upload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ${{ steps.package.outputs.artifact_name }}
+          path: ${{ env.RUN_ROOT }}/dist/*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+          overwrite: false
+
+      - name: Add the build download to the run summary
+        env:
+          ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
+        run: |
+          "[Download Windows profile build]($env:ARTIFACT_URL)" >> $env:GITHUB_STEP_SUMMARY
+          "Source commit: $env:GITHUB_SHA. Compilation and portable tests passed; editor startup and processed assets are unverified." >> $env:GITHUB_STEP_SUMMARY
+
+      - name: Preserve build diagnostics even on failure
+        if: ${{ always() && steps.prepare.outputs.ready == 'true' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: OutlawEngine-Windows-logs-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ env.RUN_ROOT }}/logs/
+            ${{ env.SOURCE_ROOT }}/Projects/Wanted/build/windows/CMakeFiles/CMakeConfigureLog.yaml
+            ${{ env.RUN_ROOT }}/tests-*/Testing/Temporary/LastTest.log
+          if-no-files-found: warn
+          retention-days: 14
+          overwrite: false
+
+  draft_release:
+    needs: build
+    if: ${{ inputs.create_draft_release && needs.build.result == 'success' }}
+    # Separate job: repository build scripts never receive a write-scoped token.
+    runs-on: [self-hosted, Windows, X64, outlaw-o3de]
+    timeout-minutes: 60
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      SOURCE_SHA: ${{ needs.build.outputs.source_sha }}
+      PACKAGE_BYTES: ${{ needs.build.outputs.package_bytes }}
+      RELEASE_TAG: outlaw-windows-${{ github.run_id }}-${{ github.run_attempt }}
+
+    steps:
+      - name: Prepare a new release directory
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Get-Command gh -ErrorAction Stop | Out-Null
+          if ($env:SOURCE_SHA -notmatch '^[0-9a-f]{40}$') { throw 'Invalid build commit.' }
+          $releaseRoot = Join-Path $env:GITHUB_WORKSPACE "release-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT"
+          if (Test-Path -LiteralPath $releaseRoot) { throw 'Refusing to reuse an existing release directory.' }
+          $drive = [IO.DriveInfo]::new([IO.Path]::GetPathRoot($releaseRoot))
+          if ($drive.AvailableFreeSpace -lt (3 * [long]$env:PACKAGE_BYTES + 5GB)) {
+            throw 'Insufficient space to download the release payload. The Actions artifact is already available.'
+          }
+          New-Item -ItemType Directory -Path $releaseRoot | Out-Null
+          "RELEASE_ROOT=$releaseRoot" >> $env:GITHUB_ENV
+
+      - name: Download only this run's successful build
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: ${{ needs.build.outputs.artifact_name }}
+          path: ${{ env.RELEASE_ROOT }}/payload
+          digest-mismatch: error
+
+      - name: Verify payload and create a new draft prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $PSNativeCommandUseErrorActionPreference = $false
+          $payload = Join-Path $env:RELEASE_ROOT 'payload'
+          $checksums = @(Get-Content -LiteralPath "$payload/SHA256SUMS.txt")
+          if ($checksums.Count -lt 3) { throw 'Incomplete release checksums.' }
+          foreach ($line in $checksums) {
+            if ($line -notmatch '^([a-f0-9]{64})  ([A-Za-z0-9._-]+)$') { throw 'Invalid checksum entry.' }
+            $expected = $Matches[1]
+            $file = Join-Path $payload $Matches[2]
+            if ((Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash -ne $expected) { throw 'Release checksum mismatch.' }
+          }
+          $info = Get-Content -Raw -LiteralPath "$payload/build-info.json" | ConvertFrom-Json
+          if ($info.commit -cne $env:SOURCE_SHA) { throw 'Release payload commit mismatch.' }
+          $assets = @(Get-ChildItem -LiteralPath $payload -File)
+          if ($assets.Count -ne ($checksums.Count + 1)) { throw 'Unexpected files in release payload.' }
+          if ($assets | Where-Object { $_.Length -ge 2GB }) { throw 'A release asset exceeds GitHub limits.' }
+          $existingRefs = gh api "repos/$env:GITHUB_REPOSITORY/git/matching-refs/tags/$env:RELEASE_TAG" --jq 'length'
+          if ($LASTEXITCODE -ne 0) { throw 'Could not check existing release tags.' }
+          if ([int]$existingRefs -ne 0) { throw 'Release tag already exists; refusing to reuse or move it.' }
+          $notes = Join-Path $env:RELEASE_ROOT 'release-notes.md'
+          @"
+          Windows profile developer build of Outlaw Engine / Wanted.
+
+          Source commit: $env:SOURCE_SHA
+          Build run: $env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID
+
+          Download all numbered 7-Zip volumes together and extract the .7z.001 file.
+          Read README-BUILD.txt and build-info.json. SHA256SUMS.txt verifies the files.
+
+          Compilation and portable tests passed. Editor startup, asset processing,
+          relocation and gameplay have not been verified. This is a source-dependent
+          developer build, not an installer or a packaged playable game.
+          "@ | Set-Content -LiteralPath $notes -Encoding utf8NoBOM
+          $assetPaths = @($assets.FullName)
+          gh release create $env:RELEASE_TAG @assetPaths --repo $env:GITHUB_REPOSITORY `
+            --target $env:SOURCE_SHA --draft --prerelease --latest=false `
+            --title "Outlaw Engine Windows profile - $env:RELEASE_TAG" --notes-file $notes
+          if ($LASTEXITCODE -ne 0) {
+            throw 'Draft release creation/upload failed. Inspect Releases for a partial draft; the build artifact remains available.'
+          }
+          "Created draft prerelease $env:RELEASE_TAG at $env:SOURCE_SHA. Review it in the repository Releases page before publishing." >> $env:GITHUB_STEP_SUMMARY
