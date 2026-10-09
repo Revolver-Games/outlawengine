@@ -1,0 +1,59 @@
+UpdateCTestConfiguration  from :<workspace>/work/build-combined/DartConfiguration.tcl
+Test project <workspace>/work/build-combined
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: Wanted.FirstErrand
+
+1: Test command: <workspace>\work\build-combined\Debug\WantedFirstErrandTests.exe
+1: Working Directory: <workspace>/work/build-combined
+1: Test timeout computed to be: 10000000
+1: 20 mission assertions passed
+1/5 Test #1: Wanted.FirstErrand ...............   Passed    0.01 sec
+test 2
+    Start 2: Wanted.Narrative
+
+2: Test command: <workspace>\work\build-combined\Debug\WantedNarrativeTests.exe "<workspace>/work/outlawengine/Projects/Wanted/Tests/../Assets/Narrative/unclaimed_post.narrative.json"
+2: Working Directory: <workspace>/work/build-combined
+2: Test timeout computed to be: 10000000
+2: 4212 mission/story assertions passed; delivery rewards once, guarded dialogue, atomic journal restore.
+2/5 Test #2: Wanted.Narrative .................   Passed    2.96 sec
+test 3
+    Start 3: Wanted.NarrativeCinematic
+
+3: Test command: <workspace>\work\build-combined\Debug\WantedNarrativeCinematicTests.exe "<workspace>/work/outlawengine/Projects/Wanted/Tests/../Assets/Narrative/unclaimed_post.narrative.json" "<workspace>/work/cinescript-integration-source/Gems/CineScript/../../Projects/Wanted/Assets/CineScript/mercy_delivery.cinescript.json" "<workspace>/work/cinescript-integration-source/Gems/CineScript/../../Projects/Wanted/Assets/ScriptMotion/courier.skeleton.json" "<workspace>/work/cinescript-integration-source/Gems/CineScript/../../Projects/Wanted/Assets/ScriptMotion/courier_wave.scriptmotion.json"
+3: Working Directory: <workspace>/work/build-combined
+3: Test timeout computed to be: 10000000
+3: 724 combined assertions passed: authored mission -> story flags -> CineScript -> ScriptMotion; save/skip without duplicate rewards.
+3/5 Test #3: Wanted.NarrativeCinematic ........   Passed    0.15 sec
+test 4
+    Start 4: CineScript.Timeline
+
+4: Test command: <workspace>\work\build-combined\cinescript\Debug\CineScriptTests.exe
+4: Working Directory: <workspace>/work/build-combined/cinescript
+4: Test timeout computed to be: 10000000
+4: 97 CineScript assertions passed
+4/5 Test #4: CineScript.Timeline ..............   Passed    0.03 sec
+test 5
+    Start 5: CineScript.MercyCrossing
+
+5: Test command: <workspace>\work\build-combined\cinescript\Debug\cinescript_demo.exe "<workspace>/work/cinescript-integration-source/Gems/CineScript/Standalone/../../../Projects/Wanted/Assets/CineScript/mercy_delivery.cinescript.json" "<workspace>/work/cinescript-integration-source/Gems/CineScript/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/courier.skeleton.json" "<workspace>/work/cinescript-integration-source/Gems/CineScript/Standalone/../../../Projects/Wanted/Assets/ScriptMotion/courier_wave.scriptmotion.json"
+5: Working Directory: <workspace>/work/build-combined/cinescript
+5: Test timeout computed to be: 10000000
+5: camera wide
+5: cue mercy_evening
+5: player: Found your satchel by the water tower.
+5: camera ada_close
+5: ada_mercer: Much obliged. Mercy Crossing still has decent folk.
+5: cue ada_thanks_voice
+5: cue delivery_acknowledged
+5: Mission completed once; 2 camera cuts; 2 dialogue lines; 128 evaluated animation frames; one completion; player control released.
+5/5 Test #5: CineScript.MercyCrossing .........   Passed    0.06 sec
+
+100% tests passed out of 5
+
+Total Test time (real) =   3.30 sec
